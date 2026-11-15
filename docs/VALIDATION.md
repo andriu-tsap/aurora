@@ -45,3 +45,7 @@ FCP 0.8 s; LCP 2.7 s; total blocking time 250 ms; CLS 0. Raw JSON and HTML are i
 ## Final handoff contract
 
 After all stages are implemented and accepted, deliver one ZIP with complete source (no dependencies, secrets or caches), prebuilt `/aurora/` and `/aurora/admin/` exports, README, this validation record, licenses, `.env.example`, screenshots and Lighthouse evidence. Before packaging, mark every original requested feature ✅ working / ⚠️ partial / ❌ missing. Stage-1 evidence is not a substitute for that final checklist.
+
+## Accepted stage-one follow-up — 2026-11-15
+
+User accepted the overall stage-one design, then requested five layout adjustments. Application revision `6643b44` implements them. [QA run](https://github.com/andriu-tsap/aurora/actions/runs/43701133745) passed all five browser tests, including new assertions for caption/button separation at 390 px and a stacked search button at 360 px. Updated 1440/390/360 screenshots were inspected. Pages deployment succeeded. The latest mobile Lighthouse run scored **86 / 100 / 100 / 100**; the earlier 91 is not represented as the current score. Further startup optimization is planned during stage 2.
