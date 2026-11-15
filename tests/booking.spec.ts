@@ -35,6 +35,9 @@ async function openStay(page: Page) {
 test("book with a test card, keep only the result, download a PDF voucher", async ({
   page,
 }) => {
+  // Desktop width loads the 3D cabin; on a software-WebGL CI runner the
+  // screenshots alone can exceed the default 60 s, so this one test gets more.
+  test.setTimeout(180_000);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await openStay(page);
   await pickDates(page);

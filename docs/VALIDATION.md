@@ -90,6 +90,7 @@ Status: implemented, waiting for the owner's "OK". Fresh screenshots are in `doc
 
 ### Not verified
 
+- CI: the separate Visual QA workflow failed once on the desktop booking test (60 s test timeout while taking a screenshot on a software-WebGL runner); the Pages deployment itself succeeded. The test now has a 180 s timeout; the next CI run has not been observed yet.
 - Lighthouse in the project's CI (the numbers above are local); UA confirmation screenshot; a 1440 confirmation dialog capture (the desktop stay page loads software-WebGL 3D and is too slow to capture reliably here).
 - Vouchers in real desktop/mobile PDF viewers (only poppler), screen-reader behaviour of the calendar, real phones, the deployed site for this commit.
 
