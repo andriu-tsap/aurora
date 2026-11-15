@@ -1,4 +1,7 @@
-<h1>{{ i18n.t().propertiesTitle }}</h1>
+<div class="head">
+  <h1>{{ i18n.t().propertiesTitle }}</h1>
+  <a class="btn btn-primary" routerLink="/properties/new" data-testid="add-property">{{ i18n.t().addProperty }}</a>
+</div>
 <p class="lead">{{ i18n.t().propertiesLead }}</p>
 @if (!store.persisted()) {
   <p class="warn" role="alert">{{ i18n.t().saveFailed }}</p>
@@ -9,6 +12,7 @@
       <img class="thumb" [src]="thumb(row)" alt="" width="120" height="75" loading="lazy" />
       <div class="info">
         <h2>{{ row.name }}</h2>
+        <a class="edit" [routerLink]="['/properties', row.slug]" [attr.aria-label]="i18n.t().editProperty + ': ' + row.name">{{ i18n.t().editProperty }}</a>
         <p class="meta">
           {{ i18n.region(row.region) }} · {{ i18n.t().colGuests }}: {{ row.maxGuests }}
           @if (store.isEdited(row.slug)) {

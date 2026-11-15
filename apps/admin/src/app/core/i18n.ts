@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, signal } from "@angular/core";
-import type { Locale, RegionId } from "@aurora/types";
+import type { Amenity, Locale, RegionId } from "@aurora/types";
 
 import { en, type Messages } from "./messages/en";
 import { pl } from "./messages/pl";
@@ -49,6 +49,10 @@ export class I18n {
 
   region(id: RegionId): string {
     return this.t()[regionKey[id]];
+  }
+
+  amenity(a: Amenity): string {
+    return this.t()[`amenity_${a}`];
   }
 
   eur(cents: number): string {

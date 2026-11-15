@@ -4,6 +4,7 @@ import {
   inject,
   signal,
 } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import type { OwnerStayRow } from "@aurora/demo-data";
 
 import { I18n } from "../../core/i18n";
@@ -11,6 +12,7 @@ import { OwnerStore } from "../../core/owner-store";
 
 @Component({
   selector: "au-properties",
+  imports: [RouterLink],
   templateUrl: "./properties.html",
   styleUrl: "./properties.css",
   changeDetection: ChangeDetectionStrategy.OnPush,

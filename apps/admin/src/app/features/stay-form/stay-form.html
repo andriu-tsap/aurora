@@ -1,0 +1,146 @@
+<a class="back" routerLink="/properties">← {{ i18n.t().backToList }}</a>
+<h1>{{ isNew ? i18n.t().newTitle : i18n.t().editTitle }}</h1>
+
+<form class="form" novalidate (submit)="$event.preventDefault(); submit()" data-testid="stay-form">
+  @if (invalidCount() > 0) {
+    <p class="warn" role="alert">{{ i18n.t().formErrors }}</p>
+  }
+  @if (saveError()) {
+    <p class="warn" role="alert">{{ i18n.t().saveFailed }}</p>
+  }
+
+  <div class="grid">
+    <div class="field wide">
+      <label for="f-name">{{ i18n.t().formName }}</label>
+      <input id="f-name" type="text" maxlength="80" autocomplete="off" [value]="name()"
+        (input)="name.set(value($event))"
+        [attr.aria-invalid]="errors().name ? 'true' : null"
+        [attr.aria-describedby]="errors().name ? 'e-name' : null" />
+      @if (errors().name) { <p class="err" id="e-name">{{ i18n.t().errName }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-region">{{ i18n.t().formRegion }}</label>
+      <select id="f-region" [disabled]="!isCustom" [value]="region()"
+        (change)="setRegion($event)" [attr.aria-describedby]="isCustom ? null : 'h-region'">
+        @for (r of regions; track r) {
+          <option [value]="r" [selected]="r === region()">{{ i18n.region(r) }}</option>
+        }
+      </select>
+      @if (!isCustom) { <p class="hint" id="h-region">{{ i18n.t().formRegionFixed }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-guests">{{ i18n.t().formGuests }}</label>
+      <input id="f-guests" type="text" inputmode="numeric" [value]="guests()"
+        (input)="guests.set(value($event))"
+        [attr.aria-invalid]="errors().maxGuests ? 'true' : null"
+        [attr.aria-describedby]="errors().maxGuests ? 'e-guests' : null" />
+      @if (errors().maxGuests) { <p class="err" id="e-guests">{{ i18n.t().errGuests }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-nightly">{{ i18n.t().formNightly }}</label>
+      <input id="f-nightly" type="text" inputmode="decimal" [value]="nightly()"
+        (input)="nightly.set(value($event))"
+        [attr.aria-invalid]="errors().nightlyCents ? 'true' : null"
+        [attr.aria-describedby]="errors().nightlyCents ? 'e-nightly' : null" />
+      @if (errors().nightlyCents) { <p class="err" id="e-nightly">{{ i18n.t().errNightly }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-cleaning">{{ i18n.t().formCleaning }}</label>
+      <input id="f-cleaning" type="text" inputmode="decimal" [value]="cleaning()"
+        (input)="cleaning.set(value($event))"
+        [attr.aria-invalid]="errors().cleaningFeeCents ? 'true' : null"
+        [attr.aria-describedby]="errors().cleaningFeeCents ? 'e-cleaning' : null" />
+      @if (errors().cleaningFeeCents) { <p class="err" id="e-cleaning">{{ i18n.t().errCleaning }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-weekly">{{ i18n.t().formWeekly }}</label>
+      <input id="f-weekly" type="text" inputmode="decimal" [value]="weekly()"
+        (input)="weekly.set(value($event))"
+        [attr.aria-invalid]="errors().weeklyDiscountBp ? 'true' : null"
+        [attr.aria-describedby]="errors().weeklyDiscountBp ? 'e-weekly' : null" />
+      @if (errors().weeklyDiscountBp) { <p class="err" id="e-weekly">{{ i18n.t().errWeekly }}</p> }
+    </div>
+
+    <div class="field">
+      <label for="f-min">{{ i18n.t().formMinNights }}</label>
+      <input id="f-min" type="text" inputmode="numeric" [value]="minNights()"
+        (input)="minNights.set(value($event))"
+        [attr.aria-invalid]="errors().minNights ? 'true' : null"
+        [attr.aria-describedby]="errors().minNights ? 'e-min' : null" />
+      @if (errors().minNights) { <p class="err" id="e-min">{{ i18n.t().errMinNights }}</p> }
+    </div>
+  </div>
+
+  <fieldset class="amenities">
+    <legend>{{ i18n.t().formAmenities }}</legend>
+    <div class="checks">
+      @for (a of amenities; track a) {
+        <label class="check">
+          <input type="checkbox" [checked]="picked().includes(a)"
+            (change)="toggle(a, $event)" />
+          {{ i18n.amenity(a) }}
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <section class="photos" aria-labelledby="photos-title">
+    <h2 id="photos-title">{{ i18n.t().formPhotos }}</h2>
+    @if (isCustom) {
+      <div class="drop" [class.over]="dragging()" data-testid="photo-drop"
+        (dragover)="$event.preventDefault(); dragging.set(true)"
+        (dragleave)="dragging.set(false)" (drop)="onDrop($event)">
+        <p>
+          {{ i18n.t().dropHint }}
+          <label class="pick">
+            <input #file type="file" accept="image/jpeg,image/png,image/webp" multiple
+              data-testid="photo-input" (change)="onPick(file)" />
+            <span>{{ i18n.t().choosePhotos }}</span>
+          </label>
+        </p>
+        <p class="hint">{{ i18n.t().photoHelp }}</p>
+      </div>
+      @if (photos().length > 0) {
+        <ul class="thumbs" data-testid="photo-list">
+          @for (p of photos(); track $index) {
+            <li>
+              <img [src]="p" alt="" width="160" height="100" />
+              <button type="button" class="btn small" (click)="removePhoto($index)">
+                {{ i18n.t().removePhoto }} {{ $index + 1 }}
+              </button>
+            </li>
+          }
+        </ul>
+        <p class="hint">{{ photos().length }} / {{ maxPhotos }} {{ i18n.t().photoCount }}</p>
+      }
+    } @else {
+      <p class="hint">{{ i18n.t().photosDemoNote }}</p>
+    }
+    <p class="sr-only" role="status">{{ liveMsg() }}</p>
+    @if (liveMsg()) { <p class="live" aria-hidden="true">{{ liveMsg() }}</p> }
+  </section>
+
+  <div class="actions">
+    <button type="submit" class="btn btn-primary" data-testid="save-stay">{{ i18n.t().save }}</button>
+    <a class="btn" routerLink="/properties">{{ i18n.t().cancel }}</a>
+    @if (!isNew && !isCustom && isEdited()) {
+      <button type="button" class="btn" (click)="restore()">{{ i18n.t().resetStay }}</button>
+    }
+    @if (!isNew && isCustom) {
+      @if (confirmingDelete()) {
+        <span class="confirm" role="group" [attr.aria-label]="i18n.t().deleteConfirm">
+          {{ i18n.t().deleteConfirm }}
+          <button type="button" class="btn danger" (click)="remove()">{{ i18n.t().deleteYes }}</button>
+          <button type="button" class="btn" (click)="confirmingDelete.set(false)">{{ i18n.t().cancel }}</button>
+        </span>
+      } @else {
+        <button type="button" class="btn danger" (click)="confirmingDelete.set(true)">{{ i18n.t().delete }}</button>
+      }
+    }
+  </div>
+</form>

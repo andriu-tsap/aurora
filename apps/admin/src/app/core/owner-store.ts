@@ -3,10 +3,14 @@ import {
   emptyOwnerState,
   ownerRows,
   parseOwnerState,
+  removeCustom,
   resetEdits,
+  saveStay,
   setNightly,
   stays,
   type OwnerState,
+  type OwnerStayRow,
+  type StayDraft,
 } from "@aurora/demo-data";
 
 const KEY = "aurora-admin-state";
@@ -32,24 +36,43 @@ export class OwnerStore {
     return slug in this.state().edits;
   }
 
+  rowFor(slug: string): OwnerStayRow | undefined {
+    return this.rows().find((r) => r.slug === slug);
+  }
+
+  takenSlugs(): Set<string> {
+    return new Set(this.rows().map((r) => r.slug));
+  }
+
   setNightly(slug: string, cents: number): boolean {
     const next = setNightly(this.state(), slug, cents);
     if (next === this.state()) return false;
-    this.commit(next);
-    return true;
+    return this.commit(next);
+  }
+
+  /** Saves the edit form; false when the browser refused to store it. */
+  save(slug: string, draft: StayDraft, custom: boolean, photos: string[]): boolean {
+    return this.commit(saveStay(this.state(), slug, draft, custom, photos));
   }
 
   reset(slug: string): void {
     this.commit(resetEdits(this.state(), slug));
   }
 
-  private commit(next: OwnerState): void {
-    this.state.set(next);
+  remove(slug: string): void {
+    this.commit(removeCustom(this.state(), slug));
+  }
+
+  /** The in-memory state only changes when the write succeeded, so UI and storage never disagree. */
+  private commit(next: OwnerState): boolean {
     try {
       localStorage.setItem(KEY, JSON.stringify(next));
-      this.persisted.set(true);
     } catch {
       this.persisted.set(false);
+      return false;
     }
+    this.state.set(next);
+    this.persisted.set(true);
+    return true;
   }
 }
