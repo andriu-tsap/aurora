@@ -8,10 +8,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { I18nProvider, useT, type MessageKey } from "./i18n";
+import { I18nProvider, useLocaleState, useT, type MessageKey } from "./i18n";
 
 import { type Locale } from "./messages";
 import { heroRegions, regionCount } from "./regions";
+
 const Globe = dynamic(() => import("./Globe"), { ssr: false });
 function TitleFallback() {
   const t = useT();
@@ -45,40 +46,30 @@ class SceneBoundary extends Component<
     return this.state.failed ? this.props.fallback : this.props.children;
   }
 }
-export default function Home() {
-  const [locale, setLocale] = useState<Locale>("en");
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("aurora-locale");
-      if (stored === "en" || stored === "pl" || stored === "uk")
-        setLocale(stored);
-    } catch {
-      /* Storage may be blocked. */
-    }
-  }, []);
-  const changeLocale = (value: Locale) => {
-    setLocale(value);
-    try {
-      localStorage.setItem("aurora-locale", value);
-    } catch {
-      /* The session remains usable. */
-    }
-  };
-  useEffect(() => {
-    document.documentElement.lang = locale;
-  }, [locale]);
+export default function Home({
+  stayCounts,
+}: {
+  stayCounts: Record<string, number>;
+}) {
+  const [locale, changeLocale] = useLocaleState();
   return (
     <I18nProvider locale={locale}>
-      <Landing locale={locale} setLocale={changeLocale} />
+      <Landing
+        locale={locale}
+        setLocale={changeLocale}
+        stayCounts={stayCounts}
+      />
     </I18nProvider>
   );
 }
 function Landing({
   locale,
   setLocale,
+  stayCounts,
 }: {
   locale: Locale;
   setLocale: (locale: Locale) => void;
+  stayCounts: Record<string, number>;
 }) {
   const t = useT();
   const [active, setActive] = useState(0);
@@ -186,6 +177,8 @@ function Landing({
           <a href="#discover">{t("discover")}</a>
           <a href="#idea">{t("idea")}</a>
           <a href="#how">{t("how")}</a>
+          <a href={`${base}/stays/`}>{t("navStays")}</a>
+          <a href={`${base}/cabin/`}>{t("navCabin")}</a>
         </nav>
         <div className="header-right">
           <span className="demo">
@@ -407,6 +400,13 @@ function Landing({
         <p className="dialog-coordinates">{heroRegions[active].coordinates}</p>
         <h2>{t(heroRegions[active].name)}</h2>
         <p>{t(heroRegions[active].description)}</p>
+        <a
+          className="dialog-cta"
+          href={`${base}/stays/?region=${heroRegions[active].id}`}
+        >
+          {t("seeStays")} ({stayCounts[heroRegions[active].id] ?? 0}){" "}
+          <span aria-hidden="true">→</span>
+        </a>
         <small>{t("regionNote")}</small>
       </dialog>
     </>

@@ -1,0 +1,161 @@
+/* Shared by the cabin studio and the 3D block on property pages. */
+/* ---------- Cabin studio (stage 2) ---------- */
+.cabin-page {
+  padding: clamp(28px, 5vw, 64px) 6.2% 56px;
+  max-width: 1640px;
+  margin: 0 auto;
+}
+.cabin-copy {
+  max-width: 760px;
+}
+.cabin-copy h1 {
+  font-size: clamp(40px, 5.2vw, 76px);
+  margin: 18px 0 18px;
+}
+.cabin-copy .intro {
+  max-width: 620px;
+  margin-bottom: 10px;
+}
+.cabin-specs {
+  color: #8fa3b1;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin: 0 0 28px;
+}
+.cabin-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+}
+.cabin-viewer {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #121a2e;
+  border: 1px solid #ffffff14;
+  display: grid;
+  place-items: center;
+}
+.cabin-viewer picture {
+  display: contents;
+}
+.cabin-poster,
+.cabin-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.cabin-poster {
+  object-fit: cover;
+}
+.cabin-canvas canvas {
+  touch-action: none;
+}
+.cabin-load {
+  bottom: 6%;
+}
+.cabin-hint {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #070b1abf;
+  color: #d5e2ea;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+.cabin-controls {
+  background: var(--surface);
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+.segmented {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.segmented legend {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a9e9dc;
+  margin-bottom: 8px;
+}
+.segmented div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.segmented button,
+.cabin-reset {
+  flex: 1 1 auto;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #334351;
+  background: #111b2b;
+  color: #e8f0f4;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.segmented button:hover,
+.cabin-reset:hover:not(:disabled) {
+  border-color: #72d5c2;
+}
+.segmented button[aria-pressed="true"] {
+  border-color: var(--mint);
+  background: #173039;
+  color: #dffff6;
+}
+.cabin-reset:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.cabin-stats,
+.cabin-note {
+  margin: 0;
+  font-size: 11px;
+  color: #8fa3b1;
+  line-height: 1.5;
+}
+.cabin-stats {
+  font-variant-numeric: tabular-nums;
+  color: #b9cbd6;
+}
+@media (max-width: 1100px) {
+  .cabin-stage {
+    grid-template-columns: 1fr;
+  }
+  .cabin-controls {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .cabin-viewer {
+    aspect-ratio: 4 / 5;
+    margin: 0 -6.2vw;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .cabin-controls {
+    grid-template-columns: 1fr;
+  }
+  .cabin-hint {
+    font-size: 10px;
+  }
+}

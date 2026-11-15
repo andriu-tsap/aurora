@@ -1,4 +1,5 @@
 "use client";
+import "./cabin.css";
 import type { MetalFinish, WoodFinish } from "@aurora/types";
 import dynamic from "next/dynamic";
 import {
@@ -17,7 +18,7 @@ import {
   type CabinOptions,
   type TimeOfDay,
 } from "./config";
-import type { CabinStats } from "./CabinScene";
+import type { CabinStats, CameraView } from "./CabinScene";
 
 // Three.js, R3F and post-processing live in their own lazy chunk.
 const CabinScene = dynamic(() => import("./CabinScene"), { ssr: false });
@@ -94,6 +95,7 @@ function optionsFromUrl(): {
   options: CabinOptions;
   autoload: boolean;
   low: boolean;
+  view: CameraView;
 } {
   const params = new URLSearchParams(window.location.search);
   const pick = <T extends string>(
@@ -109,6 +111,7 @@ function optionsFromUrl(): {
   return {
     autoload: params.get("autoload") === "1",
     low: params.get("quality") === "low",
+    view: pick("view", ["hero", "side", "aerial", "front"] as const, "hero"),
     options: {
       wood: pick(
         "wood",
@@ -144,9 +147,16 @@ function Studio({
   const [show, setShow] = useState(false);
   const [stats, setStats] = useState<CabinStats | null>(null);
   const [resetKey, setResetKey] = useState(0);
+  const [view, setView] = useState<CameraView>("hero");
 
   useEffect(() => {
-    const { options: initial, autoload, low } = optionsFromUrl();
+    const {
+      options: initial,
+      autoload,
+      low,
+      view: initialView,
+    } = optionsFromUrl();
+    setView(initialView);
     setOptions(initial);
     const isMobile = !matchMedia("(min-width: 768px)").matches;
     const isReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -222,6 +232,7 @@ function Studio({
                     mobile={mobile}
                     reduced={reduced}
                     resetKey={resetKey}
+                    view={view}
                     onReady={setStats}
                   />
                 </div>

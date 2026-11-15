@@ -4,7 +4,7 @@ import { Line, AdaptiveDpr } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import land from "./land.json";
-import { regions } from "@aurora/demo-data";
+import { regions } from "@aurora/demo-data/regions";
 
 // Markers and route arcs come from the same list the catalogue uses.
 const destinations = regions.map((r) => [r.lat, r.lon] as const);

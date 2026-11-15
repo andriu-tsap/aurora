@@ -23,6 +23,8 @@ export function SiteHeader({
       </a>
       <nav className="nav" aria-label={t("nav")}>
         <a href={`${base}/`}>{t("backHome")}</a>
+        <a href={`${base}/stays/`}>{t("navStays")}</a>
+        <a href={`${base}/cabin/`}>{t("navCabin")}</a>
       </nav>
       <div className="header-right">
         <span className="demo">

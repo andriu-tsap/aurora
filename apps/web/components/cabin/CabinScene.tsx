@@ -34,6 +34,7 @@ type Props = {
   reduced: boolean;
   /** Increment to reset the camera to the default view. */
   resetKey: number;
+  view?: CameraView;
   onReady?: (stats: CabinStats) => void;
 };
 
@@ -43,13 +44,40 @@ const palette = {
   night: { sky: "#141c33", fogNear: 20, fogFar: 72 },
 };
 
-// Three-quarter front view at roughly eye level, as in architectural photography.
-const target = new THREE.Vector3(0, 2.75, 1.4);
-const viewDesktop = new THREE.Vector3(7.4, 3.1, 17.2);
-const viewPortrait = new THREE.Vector3(8.6, 3.4, 20.2);
+export type CameraView = "hero" | "side" | "aerial" | "front";
+
+// Named framings. "hero" is the three-quarter front view at roughly eye
+// level, as in architectural photography; the others feed gallery renders.
+const views: Record<
+  CameraView,
+  { target: THREE.Vector3; wide: THREE.Vector3; portrait: THREE.Vector3 }
+> = {
+  hero: {
+    target: new THREE.Vector3(0, 2.75, 1.4),
+    wide: new THREE.Vector3(7.4, 3.1, 17.2),
+    portrait: new THREE.Vector3(8.6, 3.4, 20.2),
+  },
+  // Mirror of "hero" from the sunlit west side: slope and glass gable.
+  side: {
+    target: new THREE.Vector3(0, 2.7, 1.2),
+    wide: new THREE.Vector3(-10.2, 3.0, 15.4),
+    portrait: new THREE.Vector3(-12, 3.4, 18.4),
+  },
+  aerial: {
+    target: new THREE.Vector3(0, 1.6, 1.8),
+    wide: new THREE.Vector3(11.5, 11, 15.5),
+    portrait: new THREE.Vector3(13.5, 13, 18),
+  },
+  front: {
+    target: new THREE.Vector3(0, 2.5, 2),
+    wide: new THREE.Vector3(0.9, 2.1, 17.8),
+    portrait: new THREE.Vector3(1, 2.4, 21.5),
+  },
+};
+const viewDesktop = views.hero.wide;
 
 /** Fits the default framing to the viewport aspect and handles reset. */
-function CameraRig({ resetKey }: { resetKey: number }) {
+function CameraRig({ resetKey, view }: { resetKey: number; view: CameraView }) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const size = useThree((s) => s.size);
   const controls = useThree((s) => s.controls) as unknown as {
@@ -59,7 +87,9 @@ function CameraRig({ resetKey }: { resetKey: number }) {
   const invalidate = useThree((s) => s.invalidate);
   useLayoutEffect(() => {
     const portrait = size.width / size.height < 0.9;
-    camera.position.copy(portrait ? viewPortrait : viewDesktop);
+    const framing = views[view];
+    const target = framing.target;
+    camera.position.copy(portrait ? framing.portrait : framing.wide);
     camera.fov = portrait ? 38 : 32;
     camera.updateProjectionMatrix();
     camera.lookAt(target);
@@ -68,7 +98,7 @@ function CameraRig({ resetKey }: { resetKey: number }) {
       controls.update();
     }
     invalidate();
-  }, [camera, size.width, size.height, controls, resetKey, invalidate]);
+  }, [camera, size.width, size.height, controls, resetKey, view, invalidate]);
   return null;
 }
 
@@ -207,7 +237,14 @@ function Lighting({ night, mobile }: { night: boolean; mobile: boolean }) {
   );
 }
 
-function Scene({ options, mobile, reduced, resetKey, onReady }: Props) {
+function Scene({
+  options,
+  mobile,
+  reduced,
+  resetKey,
+  view = "hero",
+  onReady,
+}: Props) {
   const night = options.time === "night";
   const sky = palette[options.time];
   const [active, setActive] = useState(!reduced);
@@ -256,7 +293,7 @@ function Scene({ options, mobile, reduced, resetKey, onReady }: Props) {
         onEnd={scheduleIdle}
         regress
       />
-      <CameraRig resetKey={resetKey} />
+      <CameraRig resetKey={resetKey} view={view} />
       {mobile ? (
         <EffectComposer multisampling={4} enableNormalPass={false}>
           <Bloom

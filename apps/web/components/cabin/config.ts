@@ -1,4 +1,4 @@
-import type { MetalFinish, StayType, WoodFinish } from "@aurora/types";
+import type { MetalFinish, WoodFinish } from "@aurora/types";
 
 /**
  * Every dimension of the code-built A-frame, in metres.
@@ -53,13 +53,6 @@ export const cabinConfig = {
   lantern: { size: 0.16, height: 0.3 },
   pier: { size: 0.32 },
 } as const;
-
-/** Size classes used by the catalogue (pod, cabin, lodge) as scale factors. */
-export const sizeScale: Record<StayType, number> = {
-  pod: 0.72,
-  cabin: 1,
-  lodge: 1.18,
-};
 
 export interface WoodLook {
   base: string;
