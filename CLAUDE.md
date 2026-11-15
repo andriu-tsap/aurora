@@ -12,15 +12,15 @@ AURORA — fictional booking platform for unique stays (glamping, mountain cabin
 
 ## Current state
 
-- Stage 0 ✅, Stage 1 ✅ (accepted; 5 follow-up fixes in `6643b44`).
-- **Stage 2 — implemented, waiting for owner "OK".** Done and pushed: Lighthouse (home 93–95 in 6 local runs; /stays/, stay page, /cabin/ 94–96 report-only), demo data, 3D cabin (owner's 6 fixes applied), catalogue `/stays/` with filters + URL sync, MapLibre map (mobile List/Map toggle), property page `/stays/<slug>/` with gallery lightbox + embedded cabin + JSON-LD, 28 own-cabin renders. Map screenshots use a stubbed basemap (OpenFreeMap unreachable from sandbox) — real tiles NOT visually verified. Next: owner review of cabin + catalogue screenshots; then stage 3.
+- Stage 0 ✅, Stage 1 ✅ (accepted; 5 follow-up fixes in `6643b44`), Stage 2 ✅ (owner wrote "OK" 2026-11-15).
+- **Stage 3 — starting** (booking flow, Stripe test mode in demo, PDF voucher + QR, guest account). Stage 2 shipped: catalogue `/stays/`, MapLibre map, property pages, own-cabin renders. Known gap: real OpenFreeMap tiles were never visually verified (sandbox has no access) — check on the live site.
 - Owner decisions: property photos = renders of our own cabin (no stock photos); separate `/en/ /pl/ /ua/` SEO routes postponed to stage 8.
 - Testing notes: cabin e2e uses software WebGL (~30–50 s per frame). `?autoload=1&time=night&wood=charred&metal=bronze&curtains=closed&quality=low` URL params drive the studio. `window.__auroraCabin.triangles` exposes the measured count.
 - 3D lessons learned: drei `Environment` presets download HDRs from a CDN → use `Lightformer`s. IBL ignores walls → reduce `envMapIntensity` on interior-only materials. Sub-pixel deck gaps alias → MSAA ×4 on desktop. Build wood at real size (no scaling) so grain/bevels are not stretched.
 
 ## Stages
 
-0 ✅ architecture · 1 ✅ hero · 2 ← catalogue/map/property/3D cabin · 3 booking, Stripe test, PDF voucher+QR, guest account · 4 Node API + PostgreSQL/Prisma + Socket.IO + JWT · 5 Angular owner panel at `/aurora/admin/` · 6 FastAPI + aiogram bot · 7 WP headless plugin, `<aurora-availability>` widget, AI planner, PWA · 8 tests, CI, README, final ZIP.
+0 ✅ architecture · 1 ✅ hero · 2 ✅ catalogue/map/property/3D cabin · 3 ← booking, Stripe test, PDF voucher+QR, guest account · 4 Node API + PostgreSQL/Prisma + Socket.IO + JWT · 5 Angular owner panel at `/aurora/admin/` · 6 FastAPI + aiogram bot · 7 WP headless plugin, `<aurora-availability>` widget, AI planner, PWA · 8 tests, CI, README, final ZIP.
 
 Do not start the next stage until the current one works, is deployed, and the owner wrote "OK". No TODOs in deployed code.
 
