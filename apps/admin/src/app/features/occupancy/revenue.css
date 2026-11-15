@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+.rev {
+  background: var(--surface);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 16px;
+  padding: clamp(0.9rem, 3vw, 1.4rem);
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.pick label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+select {
+  min-height: 44px;
+  max-width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 10px;
+  padding: 0 0.7rem;
+  font: inherit;
+}
+.basis,
+.hint,
+.axis-note {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0.8rem 0;
+}
+.axis-note {
+  margin: 0.2rem 0 1rem;
+}
+.scroll {
+  overflow-x: auto;
+}
+.chart {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  height: auto;
+}
+.gl {
+  stroke: rgb(255 255 255 / 0.14);
+  stroke-dasharray: 3 4;
+}
+.ax {
+  fill: var(--muted);
+  font: 400 12px Inter, sans-serif;
+}
+.val {
+  fill: var(--text);
+  font: 600 11px Inter, sans-serif;
+}
+.bar {
+  fill: var(--mint);
+}
+.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.data caption {
+  text-align: left;
+  color: var(--muted);
+  padding-bottom: 0.4rem;
+}
+.data th,
+.data td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  text-align: left;
+  white-space: nowrap;
+}
+.data thead th {
+  color: var(--muted);
+  font-weight: 600;
+}
+.data tbody th {
+  font-weight: 400;
+  text-transform: capitalize;
+}
+.data .n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.data tfoot th,
+.data tfoot td {
+  font-weight: 700;
+  border-bottom: 0;
+  border-top: 2px solid rgb(255 255 255 / 0.25);
+}
+.export {
+  margin-top: 1.4rem;
+}
+.export h3 {
+  margin: 0 0 0.6rem;
+  font: 700 1.05rem "Space Grotesk", Inter, sans-serif;
+}
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.msg {
+  min-height: 1.4em;
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: var(--mint);
+}
+.msg[data-kind="error"] {
+  color: var(--coral);
+}

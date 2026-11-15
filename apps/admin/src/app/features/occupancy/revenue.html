@@ -1,0 +1,103 @@
+<section class="rev" aria-labelledby="rev-title" data-testid="revenue">
+  <div class="head">
+    <h2 id="rev-title">{{ i18n.t().revTitle }}</h2>
+    <div class="controls">
+      <div class="pick">
+        <label for="rev-scope">{{ i18n.t().revScope }}</label>
+        <select id="rev-scope" data-testid="rev-scope" (change)="chooseScope($event)">
+          <option value="all" [selected]="scope() === 'all'">{{ i18n.t().revAll }}</option>
+          @for (r of rows(); track r.slug) {
+            <option [value]="r.slug" [selected]="r.slug === scope()">{{ r.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="pick">
+        <label for="rev-year">{{ i18n.t().revYear }}</label>
+        <select id="rev-year" data-testid="rev-year" (change)="chooseYear($event)">
+          @for (y of years; track y) {
+            <option [value]="y" [selected]="y === year()">{{ y }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <p class="basis">{{ i18n.t().revBasis }}</p>
+
+  <div class="scroll" role="region" tabindex="0" [attr.aria-label]="i18n.t().chartScroll">
+    <svg
+      class="chart"
+      data-testid="revenue-chart"
+      role="img"
+      aria-labelledby="rev-svg-title rev-svg-desc"
+      [attr.viewBox]="'0 0 ' + view.width + ' ' + view.height"
+    >
+      <title id="rev-svg-title">{{ chartTitle() }}</title>
+      <desc id="rev-svg-desc">{{ chartDesc() }}</desc>
+      @for (t of ticks(); track $index) {
+        <line class="gl" [attr.x1]="view.left" [attr.x2]="view.right" [attr.y1]="t.y" [attr.y2]="t.y" />
+        <text class="ax" text-anchor="end" [attr.x]="view.left - 8" [attr.y]="t.y + 4">{{ t.label }}</text>
+      }
+      @for (b of bars(); track $index) {
+        <g>
+          <title>{{ b.tooltip }}</title>
+          <rect class="bar" rx="3" [attr.x]="b.x" [attr.y]="b.y" [attr.width]="b.width" [attr.height]="b.height" />
+          <text class="val" text-anchor="middle" [attr.x]="b.cx" [attr.y]="b.y - 6">{{ b.value }}</text>
+          <text class="ax" text-anchor="middle" [attr.x]="b.cx" [attr.y]="view.bottom + 18">{{ b.month }}</text>
+        </g>
+      }
+    </svg>
+  </div>
+  <p class="axis-note">{{ i18n.t().axisLabel }}</p>
+
+  <div class="scroll" role="region" tabindex="0" [attr.aria-label]="tableCaption()">
+    <table class="data" data-testid="revenue-table">
+      <caption>{{ tableCaption() }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ i18n.t().colMonth }}</th>
+          <th scope="col" class="n">{{ i18n.t().colNights }}</th>
+          <th scope="col" class="n">{{ i18n.t().colOccupancy }}</th>
+          <th scope="col" class="n">{{ i18n.t().colCheckIns }}</th>
+          <th scope="col" class="n">{{ i18n.t().colRevenue }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of monthly(); track m.month) {
+          <tr>
+            <th scope="row">{{ i18n.monthYear(m.month) }}</th>
+            <td class="n">{{ m.nights }}</td>
+            <td class="n">{{ pct(m) }}</td>
+            <td class="n">{{ m.checkIns }}</td>
+            <td class="n">{{ i18n.eur(m.revenueCents) }}</td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">{{ i18n.t().revTotal }}</th>
+          <td class="n">{{ totals().nights }}</td>
+          <td class="n">{{ i18n.pct(totals().occupancy) }}%</td>
+          <td class="n">{{ totals().checkIns }}</td>
+          <td class="n" data-testid="revenue-total">{{ i18n.eur(totals().revenueCents) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="export" data-testid="export">
+    <h3>{{ i18n.t().exportTitle }}</h3>
+    <div class="buttons">
+      <button type="button" class="btn" data-testid="export-csv" (click)="exportCsv()">
+        {{ i18n.t().exportCsv }}
+      </button>
+      <button type="button" class="btn" data-testid="export-xlsx" (click)="exportXlsx()">
+        {{ i18n.t().exportXlsx }}
+      </button>
+    </div>
+    <p class="hint">{{ i18n.t().exportHint }}</p>
+    <p class="msg" role="status" data-testid="export-status" [attr.data-kind]="status()?.kind ?? null">
+      {{ status()?.text }}
+    </p>
+  </div>
+</section>
