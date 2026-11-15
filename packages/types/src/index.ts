@@ -46,6 +46,9 @@ export type WoodFinish = "light" | "walnut" | "charred";
 export type MetalFinish = "black" | "graphite" | "bronze";
 
 /** Look of the code-built cabin used for this listing's renders and 3D view. */
+/** Rendered frame names available for a stay (view + time of day). */
+export type PhotoView = "hero-day" | "side-day" | "aerial-day" | "hero-night";
+
 export interface CabinLook {
   wood: WoodFinish;
   metal: MetalFinish;
@@ -79,6 +82,8 @@ export interface Stay extends LatLon {
   seasons: Season[];
   amenities: Amenity[];
   look: CabinLook;
+  /** Main (cover) frame of this stay: catalogue card, gallery lead, metadata. */
+  cover: PhotoView;
   summary: Localized;
   description: Localized;
 }

@@ -56,3 +56,10 @@ describe("demo catalogue", () => {
       }
   });
 });
+
+describe("stay covers", () => {
+  it("gives every stay its own wood/metal/frame combination", () => {
+    const keys = stays.map((s) => `${s.look.wood}-${s.look.metal}-${s.cover}`);
+    expect(new Set(keys).size).toBe(stays.length);
+  });
+});

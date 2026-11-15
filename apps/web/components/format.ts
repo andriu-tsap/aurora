@@ -1,4 +1,4 @@
-import type { Locale, Stay } from "@aurora/types";
+import type { Locale, PhotoView, Stay } from "@aurora/types";
 
 import type { MessageKey } from "./i18n";
 
@@ -27,7 +27,7 @@ export function resultsKey(count: number, locale: Locale): MessageKey {
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
-export type PhotoView = "hero-day" | "side-day" | "aerial-day" | "hero-night";
+export type { PhotoView };
 
 export const photoViews: { view: PhotoView; label: MessageKey }[] = [
   { view: "hero-day", label: "photoHero" },
@@ -36,9 +36,22 @@ export const photoViews: { view: PhotoView; label: MessageKey }[] = [
   { view: "hero-night", label: "photoNight" },
 ];
 
+/** Gallery order for a stay: its own cover first, then the other frames once each. */
+export function galleryViews(stay: Stay) {
+  const lead = photoViews.find((p) => p.view === stay.cover);
+  return lead
+    ? [lead, ...photoViews.filter((p) => p.view !== stay.cover)]
+    : photoViews;
+}
+
+/** Absolute-path part (no extension/size) of a stay's frame. */
+export function photoName(stay: Stay, view: PhotoView) {
+  return `stays/renders/${stay.look.wood}-${stay.look.metal}-${view}`;
+}
+
 /** Render of the code-built cabin in this stay's wood/metal finish. */
 export function photo(stay: Stay, view: PhotoView) {
-  const name = `${base}/stays/renders/${stay.look.wood}-${stay.look.metal}-${view}`;
+  const name = `${base}/${photoName(stay, view)}`;
   return {
     avif: `${name}-600.avif 600w, ${name}-1200.avif 1200w`,
     webp: `${name}-600.webp 600w, ${name}-1200.webp 1200w`,

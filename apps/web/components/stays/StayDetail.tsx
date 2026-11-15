@@ -11,9 +11,8 @@ import { defaultCabinOptions } from "../cabin/config";
 import {
   amenityLabel,
   formatPrice,
-  photoViews,
+  galleryViews,
   typeLabel,
-  type PhotoView,
 } from "../format";
 import { useLocale, useT, type MessageKey } from "../i18n";
 import { PageShell } from "../PageShell";
@@ -54,7 +53,8 @@ function Gallery({ stay }: { stay: Stay }) {
   const opener = useRef<HTMLButtonElement | null>(null);
   const [index, setIndex] = useState(0);
   const touch = useRef<number | null>(null);
-  const count = photoViews.length;
+  const views = galleryViews(stay);
+  const count = views.length;
   const go = useCallback(
     (delta: number) => setIndex((i) => (i + delta + count) % count),
     [count],
@@ -67,7 +67,7 @@ function Gallery({ stay }: { stay: Stay }) {
   return (
     <section className="gallery" aria-label={t("galleryLabel")}>
       <div className="gallery-grid">
-        {photoViews.map((p, i) => (
+        {views.map((p, i) => (
           <button
             key={p.view}
             type="button"
@@ -113,13 +113,13 @@ function Gallery({ stay }: { stay: Stay }) {
         <figure>
           <Photo
             stay={stay}
-            view={photoViews[index].view as PhotoView}
-            alt={`${stay.name} — ${t(photoViews[index].label)}`}
+            view={views[index].view}
+            alt={`${stay.name} — ${t(views[index].label)}`}
             sizes="90vw"
             eager
           />
           <figcaption>
-            {t(photoViews[index].label)} · {index + 1} / {count}
+            {t(views[index].label)} · {index + 1} / {count}
           </figcaption>
         </figure>
         <button
@@ -171,7 +171,7 @@ function Cabin3D({ stay }: { stay: Stay }) {
         {!stats && (
           <Photo
             stay={stay}
-            view="hero-day"
+            view={stay.cover}
             alt=""
             sizes="(max-width: 1100px) 100vw, 60vw"
             className="cabin-poster"

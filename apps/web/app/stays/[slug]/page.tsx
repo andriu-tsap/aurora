@@ -2,6 +2,7 @@ import { getRegion, getStay, stays } from "@aurora/demo-data";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { photoName } from "../../../components/format";
 import StayDetail from "../../../components/stays/StayDetail";
 
 const site = "https://andriu-tsap.github.io/aurora";
@@ -17,7 +18,7 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const stay = getStay((await params).slug);
   if (!stay) return {};
-  const image = `${site}/stays/renders/${stay.look.wood}-${stay.look.metal}-hero-day-1200.webp`;
+  const image = `${site}/${photoName(stay, stay.cover)}-1200.webp`;
   return {
     title: `${stay.name} — AURORA (demo)`,
     description: `${stay.summary.en} Concept / demo project — fictional data.`,
@@ -42,7 +43,7 @@ export default async function StayPage({ params }: Params) {
     name: `${stay.name} (fictional demo listing)`,
     description: `${stay.description.en} This is a fictional listing in a portfolio demo; it cannot be booked.`,
     url: `${site}/stays/${stay.slug}/`,
-    image: `${site}/stays/renders/${stay.look.wood}-${stay.look.metal}-hero-day-1200.webp`,
+    image: `${site}/${photoName(stay, stay.cover)}-1200.webp`,
     priceRange: `from €${stay.nightlyCents / 100} per night (demo)`,
     address: { "@type": "PostalAddress", addressCountry: region.country },
     geo: { "@type": "GeoCoordinates", latitude: stay.lat, longitude: stay.lon },

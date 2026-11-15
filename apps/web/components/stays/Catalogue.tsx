@@ -15,7 +15,13 @@ import type { Amenity, StayType } from "@aurora/types";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { amenityLabel, formatPrice, resultsKey, typeLabel } from "../format";
+import {
+  amenityLabel,
+  formatPrice,
+  photoViews,
+  resultsKey,
+  typeLabel,
+} from "../format";
 import { useLocale, useT } from "../i18n";
 import { PageShell } from "../PageShell";
 import { Photo } from "../Photo";
@@ -327,8 +333,8 @@ function CatalogueView() {
                     <div className="stay-photo">
                       <Photo
                         stay={s}
-                        view="hero-day"
-                        alt={`${s.name} — ${t("photoHero")}`}
+                        view={s.cover}
+                        alt={`${s.name} — ${t(photoViews.find((p) => p.view === s.cover)?.label ?? "photoHero")}`}
                         sizes="(max-width: 1023px) 100vw, 30vw"
                         eager={i < 2}
                       />

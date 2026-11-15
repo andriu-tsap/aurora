@@ -52,6 +52,7 @@ export const stays: Stay[] = [
       "mountain-view",
     ],
     look: { wood: "walnut", metal: "black" },
+    cover: "hero-night",
     summary: {
       en: "Spruce forest, a wood-fired sauna and a glass gable facing the ridge.",
       pl: "Świerkowy las, sauna opalana drewnem i szklany szczyt z widokiem na grzbiet.",
@@ -82,6 +83,7 @@ export const stays: Stay[] = [
     seasons: mountainSeasons,
     amenities: ["hot-tub", "pet-friendly", "parking", "mountain-view"],
     look: { wood: "light", metal: "graphite" },
+    cover: "aerial-day",
     summary: {
       en: "A compact pod for two on an open highland meadow, with a cedar hot tub.",
       pl: "Kompaktowy domek dla dwojga na otwartej połoninie, z cedrową balią.",
@@ -119,6 +121,7 @@ export const stays: Stay[] = [
       "parking",
     ],
     look: { wood: "charred", metal: "bronze" },
+    cover: "side-day",
     summary: {
       en: "A riverside lodge for six with a long deck over the rapids.",
       pl: "Dom nad rzeką dla sześciu osób z długim tarasem nad bystrzami.",
@@ -156,6 +159,7 @@ export const stays: Stay[] = [
       "mountain-view",
     ],
     look: { wood: "charred", metal: "black" },
+    cover: "hero-night",
     summary: {
       en: "A dark timber A-frame with a direct view of the high peaks.",
       pl: "Ciemny drewniany A-frame z bezpośrednim widokiem na wysokie szczyty.",
@@ -193,6 +197,7 @@ export const stays: Stay[] = [
       "parking",
     ],
     look: { wood: "light", metal: "black" },
+    cover: "hero-day",
     summary: {
       en: "A bright cabin on a wildflower meadow, made for slow remote work.",
       pl: "Jasny domek na kwietnej łące, stworzony do spokojnej pracy zdalnej.",
@@ -223,6 +228,7 @@ export const stays: Stay[] = [
     seasons: mountainSeasons,
     amenities: ["hot-tub", "wifi", "parking"],
     look: { wood: "walnut", metal: "graphite" },
+    cover: "side-day",
     summary: {
       en: "A hillside pod above a limestone gorge, with a hot tub under the larches.",
       pl: "Domek na zboczu nad wapiennym przełomem, z balią pod modrzewiami.",
@@ -253,6 +259,7 @@ export const stays: Stay[] = [
     seasons: coastSeasons,
     amenities: ["wifi", "kitchen", "parking", "sea-view"],
     look: { wood: "light", metal: "bronze" },
+    cover: "aerial-day",
     summary: {
       en: "A pale-wood A-frame in the pines, a short path from a quiet cove.",
       pl: "A-frame z jasnego drewna wśród sosen, kawałek ścieżką od cichej zatoki.",
@@ -283,6 +290,7 @@ export const stays: Stay[] = [
     seasons: coastSeasons,
     amenities: ["wifi", "pet-friendly", "sea-view"],
     look: { wood: "walnut", metal: "black" },
+    cover: "aerial-day",
     summary: {
       en: "Island pods among Aleppo pines, with sunset over open sea.",
       pl: "Domki na wyspie wśród sosen alepskich, z zachodem słońca nad otwartym morzem.",
@@ -321,6 +329,7 @@ export const stays: Stay[] = [
       "lake-view",
     ],
     look: { wood: "walnut", metal: "black" },
+    cover: "side-day",
     summary: {
       en: "A three-bedroom lodge above an alpine lake, with a sauna and a long deck.",
       pl: "Dom z trzema sypialniami nad alpejskim jeziorem, z sauną i długim tarasem.",
@@ -358,6 +367,7 @@ export const stays: Stay[] = [
       "mountain-view",
     ],
     look: { wood: "light", metal: "graphite" },
+    cover: "hero-night",
     summary: {
       en: "A light A-frame in a turquoise river valley, with a hot tub on the deck.",
       pl: "Jasny A-frame w turkusowej dolinie rzeki, z balią na tarasie.",
