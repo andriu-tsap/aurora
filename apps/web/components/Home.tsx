@@ -11,6 +11,7 @@ import {
 import { I18nProvider, useT, type MessageKey } from "./i18n";
 
 import { type Locale } from "./messages";
+import { heroRegions, regionCount } from "./regions";
 const Globe = dynamic(() => import("./Globe"), { ssr: false });
 function TitleFallback() {
   const t = useT();
@@ -32,14 +33,6 @@ const posterSet = (format: "avif" | "webp") =>
   [480, 720, 960]
     .map((w) => `${base}/globe-poster-${w}.${format} ${w}w`)
     .join(", ");
-const names = ["carpathians", "tatras", "adriatic"] as const;
-const countries = ["ukraine", "poland", "croatia"] as const;
-const descriptions = ["carpathiansDesc", "tatrasDesc", "adriaticDesc"] as const;
-const coordinates = [
-  "48° 54′ N / 24° 30′ E",
-  "49° 12′ N / 20° 06′ E",
-  "43° 30′ N / 16° 24′ E",
-];
 class SceneBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -248,9 +241,9 @@ function Landing({
                   value={active}
                   onChange={(e) => setActive(Number(e.target.value))}
                 >
-                  {names.map((name, i) => (
-                    <option key={name} value={i}>
-                      {t(name)}
+                  {heroRegions.map((region, i) => (
+                    <option key={region.id} value={i}>
+                      {t(region.name)}
                     </option>
                   ))}
                 </select>
@@ -262,12 +255,12 @@ function Landing({
             </div>
             <div className="popular-label">
               <span>{t("inspiration")}</span>
-              <span>01 — 03</span>
+              <span>01 — {regionCount}</span>
             </div>
             <div className="regions touch-manipulation">
-              {names.map((name, i) => (
+              {heroRegions.map((region, i) => (
                 <button
-                  key={name}
+                  key={region.id}
                   className={"region " + (active === i ? "selected" : "")}
                   aria-pressed={active === i}
                   onClick={() => setActive(i)}
@@ -276,8 +269,8 @@ function Landing({
                     0{i + 1}
                     <span aria-hidden="true">↗</span>
                   </span>
-                  <strong>{t(name)}</strong>
-                  <small>{t(countries[i])}</small>
+                  <strong>{t(region.name)}</strong>
+                  <small>{t(region.country)}</small>
                 </button>
               ))}
             </div>
@@ -330,12 +323,14 @@ function Landing({
             <div className="atlas-index">{t(ready ? "mode" : "static")}</div>
             <div className="globe-label">
               <i />
-              {t(names[active])}
-              <span>{coordinates[active]}</span>
+              {t(heroRegions[active].name)}
+              <span>{heroRegions[active].coordinates}</span>
             </div>
             <div className="visual-caption">
               <span>✳ &nbsp; {t("world")}</span>
-              <span>{String(active + 1).padStart(2, "0")} / 03</span>
+              <span>
+                {String(active + 1).padStart(2, "0")} / {regionCount}
+              </span>
             </div>
             {!showGlobe && (
               <button
@@ -409,9 +404,9 @@ function Landing({
         <span className="eyebrow">
           {t("regionTitle")} / 0{active + 1}
         </span>
-        <p className="dialog-coordinates">{coordinates[active]}</p>
-        <h2>{t(names[active])}</h2>
-        <p>{t(descriptions[active])}</p>
+        <p className="dialog-coordinates">{heroRegions[active].coordinates}</p>
+        <h2>{t(heroRegions[active].name)}</h2>
+        <p>{t(heroRegions[active].description)}</p>
         <small>{t("regionNote")}</small>
       </dialog>
     </>

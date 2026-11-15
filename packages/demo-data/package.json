@@ -1,0 +1,13 @@
+{
+  "name": "@aurora/demo-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./regions.json": "./src/regions.json"
+  },
+  "dependencies": {
+    "@aurora/types": "workspace:*"
+  }
+}

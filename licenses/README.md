@@ -10,5 +10,5 @@
 
 ## Artwork and software
 - Globe poster, shader, layout and decorative marks: original project code. No downloaded human photographs, brand logos or third-party 3D models.
-- React, Next.js, Three.js, React Three Fiber, drei, next-intl, Motion, Tailwind CSS and development dependencies retain their upstream licenses in their packages.
+- React, Next.js, Three.js, React Three Fiber, drei, Motion, Tailwind CSS and development dependencies retain their upstream licenses in their packages.
 - GSAP: Standard License, https://gsap.com/community/standard-license/ . Free commercial use under its terms; not represented as an OSI open-source license.

@@ -23,6 +23,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm test:unit
       - run: pnpm build
         env:
           NEXT_PUBLIC_BASE_PATH: /aurora

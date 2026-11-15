@@ -4,16 +4,11 @@ import { Line, AdaptiveDpr } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import land from "./land.json";
-const destinations = [
-  [48.9, 24.5],
-  [49.2, 20.1],
-  [43.5, 16.4],
-];
-const origins = [
-  [38.72, -9.14],
-  [64.15, -21.94],
-  [30.04, 31.24],
-];
+import { regions } from "@aurora/demo-data";
+
+// Markers and route arcs come from the same list the catalogue uses.
+const destinations = regions.map((r) => [r.lat, r.lon] as const);
+const origins = regions.map((r) => [r.routeFrom.lat, r.routeFrom.lon] as const);
 const point = (lat: number, lon: number, r = 2) =>
   new THREE.Vector3(
     r * Math.cos((lat * Math.PI) / 180) * Math.sin((lon * Math.PI) / 180),
@@ -43,7 +38,7 @@ function World({ active, onSelect, onReady, reduced, paused, mobile }: Props) {
   const routes = useMemo(
     () =>
       destinations.map(([lat, lon], i) => {
-        const start = point(...(origins[i] as [number, number]), 2.025);
+        const start = point(origins[i][0], origins[i][1], 2.025);
         const end = point(lat, lon, 2.025);
         return new THREE.QuadraticBezierCurve3(
           start,
@@ -76,7 +71,9 @@ function World({ active, onSelect, onReady, reduced, paused, mobile }: Props) {
     if (!reduced)
       particles.current?.children.forEach((child, i) =>
         child.position.copy(
-          routes[i].getPoint((state.clock.elapsedTime * 0.12 + i / 3) % 1),
+          routes[i].getPoint(
+            (state.clock.elapsedTime * 0.12 + i / routes.length) % 1,
+          ),
         ),
       );
   });
@@ -126,7 +123,7 @@ function World({ active, onSelect, onReady, reduced, paused, mobile }: Props) {
       ))}
       <group ref={particles}>
         {routes.map((route, i) => (
-          <mesh key={i} position={route.getPoint(i / 3)}>
+          <mesh key={i} position={route.getPoint(i / routes.length)}>
             <sphereGeometry args={[0.017, 8, 8]} />
             <meshBasicMaterial color="#e0fff6" />
           </mesh>

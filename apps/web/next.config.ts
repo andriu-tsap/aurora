@@ -5,5 +5,6 @@ const config: NextConfig = {
   basePath,
   images: { unoptimized: true },
   trailingSlash: true,
+  transpilePackages: ["@aurora/types", "@aurora/demo-data"],
 };
 export default config;

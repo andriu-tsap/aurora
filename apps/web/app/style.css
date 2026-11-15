@@ -247,7 +247,7 @@ h1 em {
 }
 .regions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 9px;
 }
 .region {
@@ -258,6 +258,8 @@ h1 em {
   border-radius: 4px;
   padding: 13px 13px 15px;
   min-height: 96px;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
   transition:
     border-color 0.2s,
@@ -285,7 +287,8 @@ h1 em {
   color: #bac8d2;
   font-size: 9px;
   letter-spacing: 0.1em;
-  margin-top: 6px;
+  margin-top: auto;
+  padding-top: 6px;
 }
 .visual {
   position: absolute;
