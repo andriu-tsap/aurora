@@ -14,6 +14,8 @@ import { useEffect, useRef, useState } from "react";
 import { formatDay, formatPrice, nightsKey } from "../format";
 import { useLocale, useT, type MessageKey } from "../i18n";
 import { Calendar } from "./Calendar";
+import { Confetti } from "./Confetti";
+import { EmailPreview } from "./EmailPreview";
 import { addBooking } from "./store";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -112,11 +114,7 @@ export function BookingPanel({ stay }: { stay: Stay }) {
     await downloadVoucher(booking, locale);
   }
 
-  const hint = !checkIn
-    ? t("bkPickDates")
-    : !checkOut
-      ? t("bkPickOut")
-      : null;
+  const hint = !checkIn ? t("bkPickDates") : !checkOut ? t("bkPickOut") : null;
 
   return (
     <section className="booking" aria-label={t("bookTitle")}>
@@ -162,7 +160,8 @@ export function BookingPanel({ stay }: { stay: Stay }) {
         <dl className="quote">
           <div>
             <dt>
-              {t("bkSubtotal")} · {quote.nights} {t(nightsKey(quote.nights, locale))}
+              {t("bkSubtotal")} · {quote.nights}{" "}
+              {t(nightsKey(quote.nights, locale))}
             </dt>
             <dd>{formatPrice(quote.subtotalCents, locale)}</dd>
           </div>
@@ -266,7 +265,11 @@ export function BookingPanel({ stay }: { stay: Stay }) {
               <button type="submit" className="btn-cta">
                 {t("payConfirm")}
               </button>
-              <button type="button" className="btn-ghost" onClick={closeCheckout}>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={closeCheckout}
+              >
                 {t("payCancel")}
               </button>
             </div>
@@ -274,11 +277,14 @@ export function BookingPanel({ stay }: { stay: Stay }) {
         )}
         {stage === "done" && booking && (
           <div className="checkout-done">
+            <Confetti />
             <h3>{t("doneTitle")}</h3>
             <p>
-              {t("doneRef")}: <strong data-testid="booking-ref">{booking.reference}</strong>
+              {t("doneRef")}:{" "}
+              <strong data-testid="booking-ref">{booking.reference}</strong>
             </p>
             <p className="muted">{t("doneDemo")}</p>
+            <EmailPreview booking={booking} />
             <div className="booking-actions">
               <button type="button" className="btn-cta" onClick={voucher}>
                 {t("doneVoucher")}
@@ -286,7 +292,11 @@ export function BookingPanel({ stay }: { stay: Stay }) {
               <a className="btn-ghost" href={`${base}/account/`}>
                 {t("doneAccount")}
               </a>
-              <button type="button" className="btn-ghost" onClick={closeCheckout}>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={closeCheckout}
+              >
                 {t("doneClose")}
               </button>
             </div>
