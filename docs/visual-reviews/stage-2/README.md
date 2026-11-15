@@ -37,3 +37,12 @@ Scene size: **78,746 triangles** (scene geometry incl. instances, counted by tra
 - Real GPUs and phones (only software WebGL), Safari/Firefox, frame rate under interaction.
 - Visual quality while orbiting (only still frames were inspected).
 - Drei `Environment` presets were **not** used (they download HDR files from a CDN); lighting is built from `Lightformer` cards instead.
+
+## Round 2 — owner review fixes
+
+1. Deck dot pattern (night, 390): root cause was aliasing of 6 mm board gaps, not shadow acne. Fix: MSAA x4 on mobile too, shaded gap-fill slab under boards, boards no longer self-cast shadows, softer roughness noise. Checked on 1440 and 390.
+2. Grass: fewer (700), lower, thinner tufts, muted palette, softer moss ground texture.
+3. Rocks: smooth lobed noise, flattened base, darker `#4e4b46`.
+4. Daylight: golden-hour sun (low, warm, front-left), gradient sky dome, matched fog, tighter soft shadows.
+5. Lanterns: moved from glass to deck railing posts.
+6. Spruces: 10 trees with random height, girth, tilt and needle tint (seeded).
