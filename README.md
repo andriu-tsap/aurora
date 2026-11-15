@@ -29,13 +29,13 @@ pnpm test:e2e
 
 - `apps/web`: Next.js 15, React, strict TypeScript, Tailwind utilities and custom CSS, Motion, GSAP, next-intl, React Three Fiber/drei.
 - `packages/ui`: shared design tokens for the future Angular UI.
-- `scripts/generate-globe.py`: reproducible Natural Earth point cloud and lightweight SVG globe.
+- `scripts/generate-globe.py`: reproducible Natural Earth point cloud and lightweight geographic poster.
 - `tests/hero.spec.ts`: desktop/mobile, language, keyboard, motion preference and WebGL failure coverage.
 - `licenses`: data/font license records.
 
 ## Globe behavior
 
-Mobile, reduced-motion and data-saver visitors receive the geographic poster first. Mobile loads WebGL only after activation. Desktop loads it after the first paint. The poster remains visible during loading and on WebGL failure. Land points and hemisphere lighting create depth; a Fresnel shader adds atmosphere. Arcs show three illustrative routes. Click a marker to view a destination or use the equivalent native HTML controls. Pause is available, and the render loop stops when the scene is offscreen.
+Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geographic poster first. Mobile loads WebGL only after activation. Desktop loads it after the first paint. The poster remains visible during loading and on WebGL failure. Land points and hemisphere lighting create depth; a Fresnel shader adds atmosphere. Arcs show three illustrative routes. Click a marker to view a destination or use the equivalent native HTML controls. Pause is available, and the render loop stops when the scene is offscreen.
 
 ## Delivery plan
 

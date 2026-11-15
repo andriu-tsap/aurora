@@ -18,7 +18,7 @@ Not implemented in stage 1: catalogue/map, cabin, booking/payments, account, bac
 ## Known limits
 - Locale switches client-side; separate `/en/`, `/pl/`, `/ua/` SEO routes are deferred.
 - No light theme yet. Day/night cabin screenshots belong to stage 2.
-- Mobile uses an SVG geographic poster until explicit interaction; no post-processing in either globe quality tier.
+- Mobile uses a pre-rendered WebP geographic poster until explicit interaction; no post-processing in either globe quality tier.
 - WebGL software-rendered screenshots are visual evidence, not a real-device GPU performance benchmark.
 - Lighthouse is a lab result and cannot guarantee a score on every device.
 - The `<aurora-availability>` widget and Angular `/admin/` export are not part of stage 1.

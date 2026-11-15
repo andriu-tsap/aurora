@@ -946,3 +946,20 @@ footer a {
     transition: none;
   }
 }
+.aurora-ribbon {
+  top: -90px;
+  right: -10%;
+  width: 65%;
+  height: 160px;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    #2ef2c721 45%,
+    #8b5cff21 75%,
+    transparent
+  );
+  box-shadow: none;
+  filter: blur(60px);
+  transform: rotate(-18deg);
+  border-radius: 50%;
+}

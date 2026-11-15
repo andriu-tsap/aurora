@@ -9,9 +9,23 @@ import {
   useState,
 } from "react";
 import { NextIntlClientProvider, useTranslations } from "next-intl";
-import { motion, useReducedMotion } from "framer-motion";
+
 import { messages, type Locale } from "./messages";
 const Globe = dynamic(() => import("./Globe"), { ssr: false });
+function TitleFallback() {
+  const t = useTranslations();
+  return (
+    <>
+      <span>{t("title")}</span>
+      <br />
+      <em>{t("accent")}</em>
+    </>
+  );
+}
+const AnimatedTitle = dynamic(() => import("./AnimatedTitle"), {
+  ssr: false,
+  loading: TitleFallback,
+});
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const names = ["carpathians", "tatras", "adriatic"] as const;
 const countries = ["ukraine", "poland", "croatia"] as const;
@@ -79,7 +93,14 @@ function Landing({
   const [mobile, setMobile] = useState(true);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
-  const reduced = useReducedMotion();
+  const [reduced, setReduced] = useState(true);
+  useEffect(() => {
+    const query = matchMedia("(prefers-reduced-motion: reduce)");
+    const change = () => setReduced(query.matches);
+    change();
+    query.addEventListener("change", change);
+    return () => query.removeEventListener("change", change);
+  }, []);
   const visual = useRef<HTMLDivElement>(null);
   const story = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -121,31 +142,37 @@ function Landing({
     if (reduced || !story.current) return;
     let cleanup: (() => void) | undefined;
     let cancelled = false;
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
-      ([{ gsap }, { ScrollTrigger }]) => {
-        if (cancelled) return;
-        gsap.registerPlugin(ScrollTrigger);
-        const context = gsap.context(() => {
-          gsap.fromTo(
-            ".story-grid > div",
-            { y: 25 },
-            {
-              y: 0,
-              duration: 0.8,
-              stagger: 0.12,
-              scrollTrigger: {
-                trigger: story.current,
-                start: "top 85%",
-                once: true,
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(
+        ([{ gsap }, { ScrollTrigger }]) => {
+          if (cancelled) return;
+          gsap.registerPlugin(ScrollTrigger);
+          const context = gsap.context(() => {
+            gsap.fromTo(
+              ".story-grid > div",
+              { y: 25 },
+              {
+                y: 0,
+                duration: 0.8,
+                stagger: 0.12,
+                scrollTrigger: {
+                  trigger: story.current,
+                  start: "top 85%",
+                  once: true,
+                },
               },
-            },
-          );
-        }, story);
-        cleanup = () => context.revert();
-      },
-    );
+            );
+          }, story);
+          cleanup = () => context.revert();
+        },
+      );
+    });
+    observer.observe(story.current);
     return () => {
       cancelled = true;
+      observer.disconnect();
       cleanup?.();
     };
   }, [reduced]);
@@ -186,7 +213,7 @@ function Landing({
         </div>
       </header>
       <main id="content">
-        <section className="hero" id="top">
+        <section className="hero isolate" id="top">
           <div className="aurora-ribbon" aria-hidden="true" />
           <div className="hero-copy">
             <div className="eyebrow">
@@ -194,22 +221,19 @@ function Landing({
               {t("label")}
             </div>
             <h1>
-              <motion.span
-                key={locale + "title"}
-                initial={false}
-                animate={{ y: 0 }}
-                transition={{ duration: reduced ? 0 : 0.6 }}
-              >
-                {t("title")}
-              </motion.span>
-              <br />
-              <motion.em
-                key={locale + "accent"}
-                initial={false}
-                animate={{ y: 0 }}
-              >
-                {t("accent")}
-              </motion.em>
+              {!mobile && !reduced ? (
+                <AnimatedTitle
+                  key={locale}
+                  title={t("title")}
+                  accent={t("accent")}
+                />
+              ) : (
+                <>
+                  <span>{t("title")}</span>
+                  <br />
+                  <em>{t("accent")}</em>
+                </>
+              )}
             </h1>
             <p className="intro">{t("intro")}</p>
             <div className="search" id="discover">
@@ -239,7 +263,7 @@ function Landing({
               <span>{t("inspiration")}</span>
               <span>01 — 03</span>
             </div>
-            <div className="regions">
+            <div className="regions touch-manipulation">
               {names.map((name, i) => (
                 <button
                   key={name}
@@ -257,13 +281,18 @@ function Landing({
               ))}
             </div>
           </div>
-          <div ref={visual} className="visual" aria-label={t("globeLabel")}>
+          <div
+            ref={visual}
+            className="visual"
+            role="group"
+            aria-label={t("globeLabel")}
+          >
             <div className="visual-glow" />
             <div className="orbit orbit-one" />
             <div className="orbit orbit-two" />
             <img
               className={"globe-poster " + (ready ? "poster-hidden" : "")}
-              src={`${base}/globe-poster.svg`}
+              src={`${base}/globe-poster.webp`}
               width="640"
               height="640"
               alt=""

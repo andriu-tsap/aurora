@@ -11,6 +11,7 @@ import "@aurora/ui/tokens.css";
 import "./style.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://andriu-tsap.github.io/aurora/"),
+  icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icon.svg` },
   title: "AURORA — Find your somewhere",
   description:
     "Quiet cabins. Wild horizons. Discover a fictional travel concept for the Carpathians, Tatras and Adriatic. Concept / demo project — fictional data.",
