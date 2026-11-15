@@ -15,6 +15,7 @@ import type { Amenity, StayType } from "@aurora/types";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { FavoriteButton } from "../favorites/FavoriteButton";
 import {
   amenityLabel,
   formatPrice,
@@ -329,6 +330,11 @@ function CatalogueView() {
                   onFocus={() => setHovered(s.slug)}
                   onBlur={() => setHovered(null)}
                 >
+                  <FavoriteButton
+                    slug={s.slug}
+                    name={s.name}
+                    className="fav-on-card"
+                  />
                   <a href={`${base}/stays/${s.slug}/`}>
                     <div className="stay-photo">
                       <Photo

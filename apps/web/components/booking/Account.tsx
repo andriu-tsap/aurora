@@ -1,14 +1,60 @@
 "use client";
 import "./booking.css";
+import "../favorites/favorites.css";
+import { getStay } from "@aurora/demo-data";
 import type { Booking } from "@aurora/types";
 import { useEffect, useState } from "react";
 
+import { FavoriteButton } from "../favorites/FavoriteButton";
+import { useFavorites } from "../favorites/store";
 import { formatDay, formatPrice, nightsKey } from "../format";
+import { Photo } from "../Photo";
 import { useLocale, useT } from "../i18n";
 import { PageShell } from "../PageShell";
 import { cancelBooking, loadBookings } from "./store";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+function Favourites() {
+  const t = useT();
+  const { slugs, persisted } = useFavorites();
+  const saved = slugs.flatMap((slug) => {
+    const stay = getStay(slug);
+    return stay ? [stay] : [];
+  });
+  return (
+    <section aria-labelledby="fav-title" data-testid="favourites">
+      <h2 id="fav-title">{t("favTitle")}</h2>
+      {!persisted && <p className="fav-note">{t("favNotSaved")}</p>}
+      {saved.length === 0 ? (
+        <p>{t("favEmpty")}</p>
+      ) : (
+        <ul className="fav-list">
+          {saved.map((s) => (
+            <li key={s.slug} className="fav-card">
+              <FavoriteButton
+                slug={s.slug}
+                name={s.name}
+                className="fav-on-card"
+              />
+              <a href={`${base}/stays/${s.slug}/`}>
+                <div className="stay-photo">
+                  <Photo
+                    stay={s}
+                    view={s.cover}
+                    alt=""
+                    sizes="(max-width: 767px) 100vw, 25vw"
+                  />
+                </div>
+                <h3>{s.name}</h3>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
 
 function List() {
   const t = useT();
@@ -31,6 +77,7 @@ function List() {
       <p className="stay-region">{t("accountEyebrow")}</p>
       <h1>{t("accountTitle")}</h1>
       <p className="demo-pill">{t("accountDemo")}</p>
+      <Favourites />
       {bookings && bookings.length === 0 && (
         <>
           <p>{t("accountEmpty")}</p>
@@ -58,13 +105,18 @@ function List() {
             <p>
               {formatDay(b.checkIn, locale)} → {formatDay(b.checkOut, locale)} ·{" "}
               {b.nights} {t(nightsKey(b.nights, locale))} · {b.guests}{" "}
-              {t("bkGuests").toLowerCase()} · {formatPrice(b.totalCents, locale)}
+              {t("bkGuests").toLowerCase()} ·{" "}
+              {formatPrice(b.totalCents, locale)}
             </p>
             <p className="muted">
               {t("doneRef")}: {b.reference} · {t("acGuest")}: {b.guestName}
             </p>
             <div className="booking-actions">
-              <button type="button" className="btn-ghost" onClick={() => voucher(b)}>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => voucher(b)}
+              >
                 {t("acVoucher")}
               </button>
               {b.status === "confirmed" && (

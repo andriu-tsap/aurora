@@ -1,0 +1,88 @@
+.fav-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #ffffff2e;
+  background: #070b1acc;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+.fav-btn:hover,
+.fav-btn:focus-visible {
+  border-color: var(--coral);
+}
+.fav-btn[aria-pressed="true"] {
+  color: var(--coral);
+  border-color: var(--coral);
+}
+.fav-btn.is-pop svg {
+  animation: fav-pop 0.45s ease-out;
+}
+@keyframes fav-pop {
+  0% {
+    transform: scale(0.7);
+  }
+  55% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fav-btn,
+  .fav-btn.is-pop svg {
+    animation: none;
+    transition: none;
+  }
+}
+.fav-on-card {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+}
+.stay-card {
+  position: relative;
+}
+.fav-in-header {
+  margin-top: 6px;
+}
+.fav-list {
+  list-style: none;
+  margin: 12px 0 28px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.fav-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.fav-card a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.fav-card .stay-photo {
+  aspect-ratio: 16 / 10;
+}
+.fav-card h3 {
+  margin: 0;
+  padding: 10px 12px 12px;
+  font-size: 1rem;
+}
+.fav-note {
+  color: var(--muted, #9aa3c0);
+}

@@ -194,7 +194,8 @@ export const en = {
   bkReserve: "Reserve",
   payTitle: "Demo payment",
   payBanner: "Demo payment — no real card is charged",
-  payNote: "Use test card 4242 4242 4242 4242 (success) or 4000 0000 0000 0002 (declined). Card details are never stored or sent anywhere.",
+  payNote:
+    "Use test card 4242 4242 4242 4242 (success) or 4000 0000 0000 0002 (declined). Card details are never stored or sent anywhere.",
   payName: "Guest name",
   payCard: "Test card number",
   payNameRequired: "Enter a guest name",
@@ -204,7 +205,8 @@ export const en = {
   payCancel: "Cancel",
   doneTitle: "Demo booking confirmed",
   doneRef: "Reference",
-  doneDemo: "demo: in production this would charge the card and send a confirmation email.",
+  doneDemo:
+    "demo: in production this would charge the card and send a confirmation email.",
   doneVoucher: "Download PDF voucher",
   doneAccount: "Open my bookings",
   doneClose: "Close",
@@ -212,7 +214,14 @@ export const en = {
   accountEyebrow: "Guest account",
   accountEmpty: "No demo bookings yet.",
   accountBrowse: "Browse stays",
-  accountDemo: "Demo: bookings are stored only in this browser. In production they live in your account on the server.",
+  favAdd: "Save to favourites",
+  favRemove: "Remove from favourites",
+  favTitle: "Favourites",
+  favEmpty: "No favourites yet. Tap the heart on a stay to save it here.",
+  favNotSaved:
+    "Your browser blocks storage, so favourites are kept only until you close this page.",
+  accountDemo:
+    "Demo: bookings are stored only in this browser. In production they live in your account on the server.",
   acCancel: "Cancel booking",
   acCancelled: "Cancelled",
   acConfirmed: "Confirmed",

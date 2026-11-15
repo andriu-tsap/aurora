@@ -6,14 +6,10 @@ import type { Stay } from "@aurora/types";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { FavoriteButton } from "../favorites/FavoriteButton";
 import type { CabinStats } from "../cabin/CabinScene";
 import { defaultCabinOptions } from "../cabin/config";
-import {
-  amenityLabel,
-  formatPrice,
-  galleryViews,
-  typeLabel,
-} from "../format";
+import { amenityLabel, formatPrice, galleryViews, typeLabel } from "../format";
 import { useLocale, useT, type MessageKey } from "../i18n";
 import { PageShell } from "../PageShell";
 import { Photo } from "../Photo";
@@ -268,6 +264,11 @@ function Detail({ slug }: { slug: string }) {
           {t(typeLabel[stay.type])}
         </p>
         <h1>{stay.name}</h1>
+        <FavoriteButton
+          slug={stay.slug}
+          name={stay.name}
+          className="fav-in-header"
+        />
         <p className="intro">{stay.summary[locale]}</p>
       </header>
       <Gallery stay={stay} />
