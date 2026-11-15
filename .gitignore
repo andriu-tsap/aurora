@@ -4,3 +4,5 @@ out
 .turbo
 .env
 .env.local
+
+*.tsbuildinfo
