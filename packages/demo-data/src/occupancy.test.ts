@@ -13,6 +13,7 @@ import {
   monthDays,
   monthGrid,
   monthStats,
+  navigateDate,
   nightState,
   parseBookings,
   rateCards,
@@ -217,5 +218,39 @@ describe("axisScale", () => {
   it("never returns an empty axis", () => {
     expect(axisScale(0).ticks.length).toBeGreaterThanOrEqual(2);
     expect(axisScale(-5).maxCents).toBeGreaterThan(0);
+  });
+});
+
+describe("navigateDate", () => {
+  it("moves by day and by week, across month edges", () => {
+    expect(navigateDate("ArrowRight", "2026-11-30", "2026-11")).toBe("2026-12-01");
+    expect(navigateDate("ArrowLeft", "2026-11-01", "2026-11")).toBe("2026-10-31");
+    expect(navigateDate("ArrowDown", "2026-11-26", "2026-11")).toBe("2026-12-03");
+    expect(navigateDate("ArrowUp", "2026-11-03", "2026-11")).toBe("2026-10-27");
+  });
+
+  it("keeps Home and End inside the shown month", () => {
+    // 2026-11-01 is a Sunday: its week starts in October, but Home stays on the 1st.
+    expect(navigateDate("Home", "2026-11-01", "2026-11")).toBe("2026-11-01");
+    expect(navigateDate("Home", "2026-11-18", "2026-11")).toBe("2026-11-16");
+    expect(navigateDate("End", "2026-11-18", "2026-11")).toBe("2026-11-22");
+    expect(navigateDate("End", "2026-11-30", "2026-11")).toBe("2026-11-30");
+  });
+
+  it("changes month with Page Up and Page Down, keeping the day when possible", () => {
+    expect(navigateDate("PageDown", "2026-01-31", "2026-01")).toBe("2026-02-28");
+    expect(navigateDate("PageUp", "2026-03-15", "2026-03")).toBe("2026-02-15");
+  });
+
+  it("stops at the first and last month of the demo data", () => {
+    expect(navigateDate("ArrowLeft", "2026-01-01", "2026-01")).toBeNull();
+    expect(navigateDate("PageUp", "2026-01-10", "2026-01")).toBeNull();
+    expect(navigateDate("ArrowRight", "2027-12-31", "2027-12")).toBeNull();
+    expect(navigateDate("PageDown", "2027-12-10", "2027-12")).toBeNull();
+  });
+
+  it("ignores keys the grid does not handle", () => {
+    expect(navigateDate("Tab", "2026-11-18", "2026-11")).toBeNull();
+    expect(navigateDate("a", "2026-11-18", "2026-11")).toBeNull();
   });
 });

@@ -11,19 +11,16 @@ import {
 import {
   DEMO_FIRST_MONTH,
   DEMO_LAST_MONTH,
-  addDays,
   busyNightsForSlug,
   clampMonth,
-  daysInMonth,
   guestNights,
   monthGrid,
   monthOf,
   monthStats,
+  navigateDate,
   nightState,
   sameDayIn,
   shiftMonth,
-  weekEnd,
-  weekStart,
   type IsoDate,
   type NightState,
   type YearMonth,
@@ -39,6 +36,17 @@ interface DayCell {
   state: NightState;
   label: string;
 }
+
+const HANDLED_KEYS: ReadonlySet<string> = new Set([
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+  "Home",
+  "End",
+  "PageUp",
+  "PageDown",
+]);
 
 /** Shapes repeat the state next to the pattern and the text, so colour is never the only cue. */
 const GLYPH: Record<NightState, string> = { free: "", busy: "×", guest: "◆" };
@@ -139,40 +147,11 @@ export class OccupancyCalendar {
 
   protected onKey(event: KeyboardEvent): void {
     if (event.altKey || event.ctrlKey || event.metaKey) return;
-    const current = this.focus();
-    const first = `${this.month()}-01`;
-    const last = `${this.month()}-${String(daysInMonth(this.month())).padStart(2, "0")}`;
-    let next: IsoDate;
-    switch (event.key) {
-      case "ArrowLeft":
-        next = addDays(current, -1);
-        break;
-      case "ArrowRight":
-        next = addDays(current, 1);
-        break;
-      case "ArrowUp":
-        next = addDays(current, -7);
-        break;
-      case "ArrowDown":
-        next = addDays(current, 7);
-        break;
-      case "Home":
-        next = weekStart(current) < first ? first : weekStart(current);
-        break;
-      case "End":
-        next = weekEnd(current) > last ? last : weekEnd(current);
-        break;
-      case "PageUp":
-        next = sameDayIn(shiftMonth(this.month(), -1), current);
-        break;
-      case "PageDown":
-        next = sameDayIn(shiftMonth(this.month(), 1), current);
-        break;
-      default:
-        return;
-    }
+    const next = navigateDate(event.key, this.focus(), this.month());
+    // Keys the grid handles are always consumed, even at the edge of the demo range.
+    if (!HANDLED_KEYS.has(event.key)) return;
     event.preventDefault();
-    this.moveTo(next);
+    if (next) this.moveTo(next);
   }
 
   private moveTo(date: IsoDate): void {

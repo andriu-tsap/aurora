@@ -169,6 +169,51 @@ export function weekEnd(date: IsoDate): IsoDate {
   return addDays(date, 6 - weekdayIndex(date));
 }
 
+/**
+ * Where a key moves the focused day in the calendar grid, or `null` for a key the grid does
+ * not handle or a move outside the months the demo data covers.
+ * Home / End stay inside the displayed month; Page Up / Page Down change the month.
+ */
+export function navigateDate(
+  key: string,
+  current: IsoDate,
+  shown: YearMonth,
+): IsoDate | null {
+  const first = `${shown}-01`;
+  const last = `${shown}-${pad2(daysInMonth(shown))}`;
+  let next: IsoDate;
+  switch (key) {
+    case "ArrowLeft":
+      next = addDays(current, -1);
+      break;
+    case "ArrowRight":
+      next = addDays(current, 1);
+      break;
+    case "ArrowUp":
+      next = addDays(current, -7);
+      break;
+    case "ArrowDown":
+      next = addDays(current, 7);
+      break;
+    case "Home":
+      next = weekStart(current) < first ? first : weekStart(current);
+      break;
+    case "End":
+      next = weekEnd(current) > last ? last : weekEnd(current);
+      break;
+    case "PageUp":
+      next = sameDayIn(shiftMonth(shown, -1), current);
+      break;
+    case "PageDown":
+      next = sameDayIn(shiftMonth(shown, 1), current);
+      break;
+    default:
+      return null;
+  }
+  const month = monthOf(next);
+  return month < DEMO_FIRST_MONTH || month > DEMO_LAST_MONTH ? null : next;
+}
+
 export interface MonthStats {
   days: number;
   /** Fictional busy nights that no guest booking covers. */
