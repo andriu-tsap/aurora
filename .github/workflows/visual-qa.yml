@@ -1,0 +1,35 @@
+name: Visual QA and Lighthouse
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /aurora
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test
+      - name: Lighthouse report (does not block Pages)
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/serve-static.mjs &
+          for i in {1..20}; do curl -sf http://127.0.0.1:4173/aurora/ > /dev/null && break; sleep 1; done
+          node scripts/lighthouse.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stage-1-visual-qa
+          path: qa/

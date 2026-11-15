@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+apps/web/components/land.json
+apps/web/public/globe-poster.svg
+node_modules
+.next
+out
+qa

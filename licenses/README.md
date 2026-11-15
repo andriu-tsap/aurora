@@ -1,7 +1,14 @@
 # Third-party resources
 
-- Natural Earth 1:110m land polygons: public domain. https://www.naturalearthdata.com/about/terms-of-use/ . The simplified coordinates used in the globe are derived from `ne_110m_land.geojson`.
-- Inter: SIL Open Font License 1.1. https://github.com/rsms/inter/blob/master/LICENSE.txt
-- Space Grotesk: SIL Open Font License 1.1. https://github.com/floriankarsten/space-grotesk/blob/master/OFL.txt
-- OpenFreeMap (planned map tiles): service and map data attribution requirements: https://openfreemap.org/quick_start/ . Map data © OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright . The map is not yet implemented.
-- Software dependency licenses are available in their respective packages and upstream repositories.
+## Geographic data
+- Globe: Natural Earth 1:110m land, public domain. Source: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson . Terms: https://www.naturalearthdata.com/about/terms-of-use/ . `scripts/generate-globe.py` derives the checked-in point cloud and SVG poster. No remote geographic request is made by the deployed homepage.
+- Map tile provider selected for stage 2: **OpenFreeMap**, https://openfreemap.org/ . No API key. Style endpoint: https://tiles.openfreemap.org/styles/liberty . Required visible attribution will include **© OpenStreetMap contributors**, **OpenFreeMap**, and any additional attribution supplied by the style/source. OpenStreetMap data is under ODbL 1.0: https://www.openstreetmap.org/copyright and https://opendatacommons.org/licenses/odbl/1-0/ . OpenFreeMap usage documentation: https://openfreemap.org/quick_start/ . The map is not yet implemented; no claim of offline tile availability is made.
+
+## Fonts
+- Inter, Rasmus Andersson: SIL Open Font License 1.1; bundled locally through Fontsource. See `Inter-OFL.txt`.
+- Space Grotesk, Florian Karsten: SIL Open Font License 1.1; bundled locally through Fontsource. See `Space-Grotesk-OFL.txt`. Inter is the Ukrainian fallback because Space Grotesk does not include Cyrillic.
+
+## Artwork and software
+- Globe poster, shader, layout and decorative marks: original project code. No downloaded human photographs, brand logos or third-party 3D models.
+- React, Next.js, Three.js, React Three Fiber, drei, next-intl, Motion, Tailwind CSS and development dependencies retain their upstream licenses in their packages.
+- GSAP: Standard License, https://gsap.com/community/standard-license/ . Free commercial use under its terms; not represented as an OSI open-source license.
