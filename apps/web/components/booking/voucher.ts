@@ -119,11 +119,32 @@ export async function buildVoucher(
     [L.nights, String(b.nights)],
     [L.total, money],
   ];
+  // Long names wrap inside the left column; each row grows with its line count
+  // so a wrapped value never runs into the next label.
+  const colW = 330;
+  const wrap = (text: string): string[] => {
+    const out: string[] = [];
+    let line = "";
+    for (const word of text.split(/\s+/)) {
+      const next = line ? `${line} ${word}` : word;
+      if (line && fB.widthOfTextAtSize(next, 14) > colW) {
+        out.push(line);
+        line = word;
+      } else {
+        line = next;
+      }
+    }
+    if (line) out.push(line);
+    return out;
+  };
   let y = 640;
   for (const [k, v] of rows) {
     page.drawText(k.toUpperCase(), { x: 48, y, size: 8, font: fR, color: rgb(0.4, 0.43, 0.5) });
-    page.drawText(v, { x: 48, y: y - 17, size: 14, font: fB, color: ink, maxWidth: 330 });
-    y -= 48;
+    const lines = wrap(v);
+    lines.forEach((ln, i) => {
+      page.drawText(ln, { x: 48, y: y - 17 - i * 17, size: 14, font: fB, color: ink });
+    });
+    y -= 48 + (lines.length - 1) * 17;
   }
 
   const url = `${window.location.origin}${base}/account/?ref=${encodeURIComponent(b.reference)}`;
