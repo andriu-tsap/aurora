@@ -30,5 +30,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/stay-form/stay-form").then((m) => m.StayForm),
   },
+  {
+    path: "occupancy",
+    canActivate: [authGuard],
+    title: "Occupancy and revenue — AURORA owner panel (demo)",
+    loadComponent: () =>
+      import("./features/occupancy/occupancy").then((m) => m.Occupancy),
+  },
   { path: "**", redirectTo: "properties" },
 ];
