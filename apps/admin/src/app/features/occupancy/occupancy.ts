@@ -22,7 +22,11 @@ import { Revenue } from "./revenue";
     }
     .stack {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 1.25rem;
+    }
+    .stack > * {
+      min-width: 0;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
