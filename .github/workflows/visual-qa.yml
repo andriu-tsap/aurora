@@ -31,17 +31,18 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: stage-1-visual-qa
+          name: visual-qa
           path: qa/
       - name: Save review evidence in a dedicated branch
         if: always()
         run: |
-          mkdir -p docs/visual-reviews/stage-1 docs/lighthouse
-          cp -r qa/screenshots/. docs/visual-reviews/stage-1/ || true
+          mkdir -p docs/visual-reviews/stage-1 docs/visual-reviews/stage-2 docs/lighthouse
+          cp qa/screenshots/*.png docs/visual-reviews/stage-1/ || true
+          cp qa/screenshots/stage-2/*.png docs/visual-reviews/stage-2/ || true
           cp -r qa/lighthouse/. docs/lighthouse/ || true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b evidence/stage-1-${{ github.run_id }}
+          git checkout -b evidence/${{ github.run_id }}
           git add docs/visual-reviews docs/lighthouse
-          git diff --cached --quiet || git commit -m "docs: capture stage one visual review evidence"
+          git diff --cached --quiet || git commit -m "docs: capture visual review evidence"
           git push origin HEAD

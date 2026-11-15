@@ -1,5 +1,12 @@
 "use client";
-import { createContext, useCallback, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 import { messages, type Locale } from "./messages";
 
@@ -37,4 +44,32 @@ export function useT() {
     (key: MessageKey) => dictionaries[locale][key] ?? dictionaries.en[key],
     [locale],
   );
+}
+
+const STORAGE_KEY = "aurora-locale";
+
+/** Persisted locale shared by every page (client-side switching). */
+export function useLocaleState() {
+  const [locale, setLocale] = useState<Locale>("en");
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === "en" || stored === "pl" || stored === "uk")
+        setLocale(stored);
+    } catch {
+      /* Storage may be blocked. */
+    }
+  }, []);
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+  const change = useCallback((value: Locale) => {
+    setLocale(value);
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      /* The session remains usable. */
+    }
+  }, []);
+  return [locale, change] as const;
 }

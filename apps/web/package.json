@@ -15,9 +15,11 @@
     "@fontsource/space-grotesk": "^5.3.0",
     "@react-three/drei": "^10.7.0",
     "@react-three/fiber": "^9.4.0",
+    "@react-three/postprocessing": "^3.2.2",
     "framer-motion": "^14.14.0",
     "gsap": "^3.15.1",
     "next": "^15.5.0",
+    "postprocessing": "^6.39.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.180.0"
