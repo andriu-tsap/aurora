@@ -4,6 +4,8 @@ A fictional travel-platform concept by Andrii Tsap. **Concept / demo project —
 
 [Live demo](https://andriu-tsap.github.io/aurora/) · [Validation](docs/VALIDATION.md) · [Licenses](licenses/README.md)
 
+![Night Atlas desktop](docs/visual-reviews/stage-1/hero-1440.png)
+
 Stage 1: responsive Next.js landing page with a geographic globe, destination previews and EN/PL/UA. The catalogue, booking, owner dashboard and backend are scheduled for subsequent stages; this repository does not represent them as completed.
 
 ## Local development
@@ -42,3 +44,7 @@ Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geo
 0 architecture → 1 hero → 2 catalogue/map/cabin → 3 booking/vouchers → 4 API → 5 Angular → 6 Python/bot → 7 CMS/widget/planner/PWA → 8 final verification.
 
 Final handoff after all accepted stages: one source ZIP excluding dependencies/secrets/caches, prebuilt public and admin exports, a per-feature honest status checklist, screenshots and measured Lighthouse reports. A stage-1 artifact is not the final project ZIP.
+
+## Stage-1 verification
+
+Five browser tests passed. Lighthouse mobile: **91 / 100 / 100 / 100** (performance / accessibility / best practices / SEO), measured on the static production build in CI. See [the full validation record](docs/VALIDATION.md), [screenshots](docs/visual-reviews/stage-1/) and [Lighthouse HTML](docs/lighthouse/mobile.html). Visual acceptance by the project owner is pending.
