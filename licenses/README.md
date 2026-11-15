@@ -20,3 +20,4 @@
 - GSAP: Standard License, https://gsap.com/community/standard-license/ . Free commercial use under its terms; not represented as an OSI open-source license.
 - DejaVu Sans (regular, bold): Bitstream Vera / DejaVu free license, see `DejaVu-LICENSE.txt`. Copied to `apps/web/public/fonts/voucher/` by `scripts/copy-fonts.mjs` and embedded only in the downloadable PDF voucher (Latin, Latin Extended, Cyrillic).
 - pdf-lib and @pdf-lib/fontkit (MIT), qrcode (MIT): PDF voucher and vector QR code, loaded lazily on download.
+- write-excel-file (MIT, https://gitlab.com/catamphetamine/write-excel-file) and its only runtime dependency fflate (MIT): build the `.xlsx` export in the owner panel. Loaded lazily from the `write-excel-file/universal` entry (no Web Workers), only when the owner clicks "Download Excel". Nothing is uploaded.
