@@ -1,0 +1,26 @@
+{
+  "stays/": {
+    "performance": 94,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "stays/halny-ridge/": {
+    "performance": 97,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "account/": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 63
+  },
+  "cabin/": {
+    "performance": 98,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  }
+}
