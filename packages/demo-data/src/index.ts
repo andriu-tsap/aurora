@@ -380,3 +380,4 @@ export function staysInRegion(id: RegionId): Stay[] {
 }
 
 export * from "./filter";
+export * from "./booking";
