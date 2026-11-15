@@ -24,6 +24,8 @@ const shots = [
   ["side", "day"],
   ["aerial", "day"],
   ["hero", "night"],
+  ["front", "day"],
+  ["front", "night"],
 ];
 const dir = "apps/web/public/stays/renders";
 await mkdir(dir, { recursive: true });
@@ -56,7 +58,14 @@ for (const look of looks) {
     await page
       .locator(".cabin-hint")
       .evaluate((el) => (el.style.visibility = "hidden"));
-    const png = await page.locator(".cabin-viewer").screenshot();
+    // Software WebGL needs minutes per frame (about 170 s even at low quality
+    // on one CPU core), so use a long timeout and clip by bounding box.
+    const box = await page.locator(".cabin-viewer").boundingBox();
+    const png = await page.screenshot({
+      clip: box,
+      fullPage: true,
+      timeout: 240000,
+    });
     await page.close();
     for (const width of [600, 1200]) {
       const image = sharp(png).resize(width, Math.round(width / 1.6), {

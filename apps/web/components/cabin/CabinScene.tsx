@@ -68,10 +68,12 @@ const views: Record<
     wide: new THREE.Vector3(11.5, 11, 15.5),
     portrait: new THREE.Vector3(13.5, 13, 18),
   },
+  // Straight-on front, pulled back and raised so the ridge and chimney keep
+  // a margin of air above them (the old framing cropped both).
   front: {
-    target: new THREE.Vector3(0, 2.5, 2),
-    wide: new THREE.Vector3(0.9, 2.1, 17.8),
-    portrait: new THREE.Vector3(1, 2.4, 21.5),
+    target: new THREE.Vector3(0, 3.1, 2),
+    wide: new THREE.Vector3(0.9, 3.3, 25),
+    portrait: new THREE.Vector3(1, 3.6, 34),
   },
 };
 const viewDesktop = views.hero.wide;
