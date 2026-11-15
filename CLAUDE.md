@@ -13,14 +13,23 @@ AURORA — fictional booking platform for unique stays (glamping, mountain cabin
 ## Current state
 
 - Stage 0 ✅, Stage 1 ✅ (accepted; 5 follow-up fixes in `6643b44`), Stage 2 ✅ (owner wrote "OK" 2026-11-15).
-- **Stage 3 — implemented, waiting for owner "OK".** Owner-approved design: fully demo booking (no backend until stage 4); availability = deterministic fictional busy nights (`packages/demo-data/src/booking.ts`); payment = honest demo form, accepts only test cards 4242… (ok) and 4000 0000 0000 0002 (declined), anything else "Use a test card number", no Stripe branding, card never stored/sent, only the booking result goes to `localStorage` key `aurora-bookings`. Done: calendar + quote + checkout dialog on `/stays/<slug>/` (`components/booking/`), PDF voucher with vector QR (pdf-lib + DejaVu Sans, lazy), guest account `/account/` (list, cancel, voucher). Real Stripe + server-side bookings come in stage 4.
+- **Stage 3 — implemented, waiting for owner "OK".** Fully demo booking: availability = deterministic fictional busy nights (`packages/demo-data/src/booking.ts`); payment = honest demo form, only test cards 4242… (ok) and 4000 0000 0000 0002 (declined), no payment-provider branding, card never stored/sent, only the booking result goes to `localStorage` key `aurora-bookings`. Done: calendar + quote + checkout dialog on `/stays/<slug>/` (`components/booking/`), PDF voucher with vector QR (pdf-lib + DejaVu Sans, lazy; long values now wrap without overlap, PL/UA glyphs checked), guest account `/account/`, favourites (`aurora-favorites`), confetti and demo confirmation-email preview. **Pending, produced separately:** e2e run on head `692f905` (the owner runs it), Lighthouse mobile (home >= 90, stay page, `/account/`), fresh stage-3 screenshots in `docs/visual-reviews/stage-3/` with README self-assessment.
+- Plan after stage 3 (owner decision): 3 → 5 → 8 (shortened). Stages 4, 6, 7 are not implemented in this version. Stage 5 starts only after the owner's "OK" on stage 3.
 - Owner decisions: property photos = renders of our own cabin (no stock photos); separate `/en/ /pl/ /ua/` SEO routes postponed to stage 8.
 - Testing notes: cabin e2e uses software WebGL (~30–50 s per frame). `?autoload=1&time=night&wood=charred&metal=bronze&curtains=closed&quality=low` URL params drive the studio. `window.__auroraCabin.triangles` exposes the measured count.
 - 3D lessons learned: drei `Environment` presets download HDRs from a CDN → use `Lightformer`s. IBL ignores walls → reduce `envMapIntensity` on interior-only materials. Sub-pixel deck gaps alias → MSAA ×4 on desktop. Build wood at real size (no scaling) so grain/bevels are not stretched.
 
 ## Stages
 
-0 ✅ architecture · 1 ✅ hero · 2 ✅ catalogue/map/property/3D cabin · 3 ✅ (awaiting OK) booking, Stripe test, PDF voucher+QR, guest account · 4 Node API + PostgreSQL/Prisma + Socket.IO + JWT · 5 Angular owner panel at `/aurora/admin/` · 6 FastAPI + aiogram bot · 7 WP headless plugin, `<aurora-availability>` widget, AI planner, PWA · 8 tests, CI, README, final ZIP.
+- 0 ✅ architecture
+- 1 ✅ hero
+- 2 ✅ catalogue, map, property page, 3D cabin
+- 3 ✅ implemented, awaiting owner "OK": booking, demo payment (test cards), PDF voucher + QR, guest account, favourites
+- 4 ❌ not implemented in this version: Node API, PostgreSQL, real Stripe, WebSocket
+- 5 ⏳ next, after "OK" on stage 3: Angular owner panel in demo mode at `/aurora/admin/` (no backend, data from `packages/demo-data` + `localStorage`)
+- 6 ❌ not implemented in this version: Python service, Telegram bot
+- 7 ❌ not implemented in this version: WordPress plugin, `<aurora-availability>` widget, AI planner, PWA
+- 8 ⏳ shortened: README tech table + Mermaid architecture, VALIDATION checklist, Lighthouse, full test run, final ZIP
 
 Do not start the next stage until the current one works, is deployed, and the owner wrote "OK". No TODOs in deployed code.
 

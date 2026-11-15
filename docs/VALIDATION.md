@@ -74,10 +74,27 @@ Order agreed with the owner: Lighthouse → demo data → 3D cabin → owner rev
 
 **Not verified:** real OpenFreeMap tiles (tests stub the style; screenshots show background + markers only); CI run of the new tests; real phones/GPUs/browsers other than local Chromium with software WebGL; deployed site after this push; Lighthouse variance on CI hardware.
 
-## Stage 3 — booking, demo payment, PDF voucher, guest account (2026-11-15)
+## Stage 3 — booking, demo payment, PDF voucher, guest account, favourites (2026-11-15)
 
-**Verified locally (sandbox):** lint, typecheck; Vitest 20/20 (6 new: deterministic busy nights, quote/weekly discount/cleaning, error cases, test-card check, references); Playwright e2e 20/20 on the static export. The booking test covers: dates picked in the calendar, quote shown, invalid card -> "Use a test card number", 4000… -> declined message, 4242… -> confirmed with reference, `localStorage` contains the reference and no card digits, PDF downloads (starts with `%PDF-`, > 10 kB), account lists and cancels the booking (persists after reload). Phone 390: no horizontal overflow, dialog inside viewport, Escape returns focus to "Reserve". The sample voucher was rendered to an image and checked by eye; its QR decoded with OpenCV to `/account/?ref=<reference>`.
+Status: implemented, waiting for the owner's "OK". **Lighthouse (stay page, `/account/`, home) and the fresh stage-3 screenshots are not part of this revision: they are being produced separately and will be added to this section and to `docs/visual-reviews/stage-3/`.**
 
-**Not verified:** live deploy of this commit; PDF in real desktop/mobile PDF viewers (only poppler render); Cyrillic/Polish text in the voucher visually (strings are embedded with DejaVu Sans, which covers them, but only the English voucher was rendered); screen-reader behaviour of the calendar; real phones; Lighthouse for the new `/account/` page and the heavier stay page; booking e2e is slow (~45 s, mostly PDF generation in software rendering).
+### Verified
 
-**By design (demo):** no payment is processed and no email is sent; the UI says "demo: in production this would charge the card and send a confirmation email." Busy dates are fictional and identical for every visitor.
+- Locally in the sandbox (earlier session, at `cf2d32a`): lint, typecheck, Playwright booking test: dates picked in the calendar, quote shown, invalid card -> "Use a test card number", `4000 0000 0000 0002` -> declined message, `4242 4242 4242 4242` -> confirmed with reference, `localStorage` holds the reference and no card digits, PDF downloads (starts with `%PDF-`, > 10 kB), account lists and cancels the booking (persists after reload). Phone 390: no horizontal overflow, dialog inside the viewport, Escape returns focus to "Reserve". The English voucher QR decoded with OpenCV to `/account/?ref=<reference>`.
+- Voucher PL and UA (this session, at `692f905`): the real `buildVoucher` was run in Node for EN, PL and UA with long names containing Ł ż ś ń ó ź Ї Ґ Є, rasterised with poppler and inspected by eye. Polish diacritics and Ukrainian Cyrillic render correctly with the embedded DejaVu Sans. This found a real layout bug: long values wrapped onto a second line and overlapped the next label. Fixed in `fix(voucher): wrap long values without overlapping the next label`; UA re-rendered after the fix and the overlap is gone.
+- This session, after the voucher fix: `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` (21/21) and `NEXT_PUBLIC_BASE_PATH=/aurora pnpm build` passed.
+- OpenFreeMap tiles: verified by owner on live site.
+
+### Not verified
+
+- `pnpm test:e2e` for the current head (`692f905`): the session had no Chromium and Playwright's download was blocked. The owner's handoff states 27/27 at `c81bab9`; I did not re-run it. The owner will run it in another session.
+- Lighthouse mobile for the home page (target >= 90), `/stays/<slug>/` and `/account/`; fresh Playwright screenshots (1440 and 390) of catalogue covers, favourites, confirmation with email preview, vouchers EN/PL/UA. Pending, produced separately.
+- Polish voucher after the layout fix was regenerated but only the UA render was re-inspected.
+- Vouchers in real desktop/mobile PDF viewers (only poppler), screen-reader behaviour of the calendar, real phones, the deployed site for this commit.
+- Confetti and the confirmation-email preview were not re-checked in this session.
+
+### By design (demo)
+
+- No payment is processed and no email is sent. The UI says so ("demo: in production this email is sent to the guest"). Only test cards are accepted, no payment-provider branding, card data is never stored or sent; only the booking result goes to `localStorage` key `aurora-bookings`. Favourites live in `aurora-favorites`.
+- Busy dates are fictional and identical for every visitor.
+- Stages 4, 6 and 7 are not implemented in this version (owner decision); see the checklist in `CLAUDE.md`.

@@ -6,7 +6,7 @@ A fictional travel-platform concept by Andrii Tsap. **Concept / demo project —
 
 ![Night Atlas desktop](docs/visual-reviews/stage-1/hero-1440.png)
 
-Stage 1: responsive Next.js landing page with a geographic globe, destination previews and EN/PL/UA. The catalogue, booking, owner dashboard and backend are scheduled for subsequent stages; this repository does not represent them as completed.
+Implemented so far: landing page with a 3D globe, filterable catalogue with map, property pages, a 3D cabin studio, and a fully demo booking flow (stages 0–3), in EN/PL/UA. There is no backend: all data is fictional and bookings live in the visitor's browser. The owner panel is planned next; see the status list below.
 
 ## Local development
 
@@ -39,11 +39,29 @@ pnpm test:e2e
 
 Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geographic poster first. Mobile loads WebGL only after activation. Desktop loads it after the first paint. The poster remains visible during loading and on WebGL failure. Land points and hemisphere lighting create depth; a Fresnel shader adds atmosphere. Arcs show three illustrative routes. Click a marker to view a destination or use the equivalent native HTML controls. Pause is available, and the render loop stops when the scene is offscreen.
 
-## Delivery plan
+## Status by stage
 
-0 architecture → 1 hero → 2 catalogue/map/cabin → 3 booking/vouchers → 4 API → 5 Angular → 6 Python/bot → 7 CMS/widget/planner/PWA → 8 final verification.
+| Stage | Scope | Status |
+| --- | --- | --- |
+| 0 | Architecture, deploy | ✅ |
+| 1 | Hero with 3D globe | ✅ |
+| 2 | Catalogue, map, property pages, 3D cabin | ✅ |
+| 3 | Booking calendar and quote, demo payment, PDF voucher with QR, guest account, favourites | ✅ implemented, awaiting owner acceptance |
+| 4 | Node.js server, PostgreSQL, real Stripe, WebSocket | ❌ not implemented in this version |
+| 5 | Angular owner panel (demo mode, no backend) | ⏳ planned next |
+| 6 | Python service, Telegram bot | ❌ not implemented in this version |
+| 7 | WordPress plugin, `<aurora-availability>` widget, AI planner, PWA | ❌ not implemented in this version |
+| 8 | Final README, validation checklist, Lighthouse, ZIP | ⏳ planned (shortened) |
 
-Final handoff after all accepted stages: one source ZIP excluding dependencies/secrets/caches, prebuilt public and admin exports, a per-feature honest status checklist, screenshots and measured Lighthouse reports. A stage-1 artifact is not the final project ZIP.
+Final handoff after the accepted stages: one source ZIP excluding dependencies/secrets/caches, prebuilt public and admin exports, a per-feature honest status checklist, screenshots and measured Lighthouse reports.
+
+## Stage 3: booking (demo)
+
+- Availability calendar and price quote on `/stays/<slug>/`. Busy nights are deterministic fictional data, the same for every visitor.
+- Checkout is a demo form: only test cards work (`4242 4242 4242 4242` succeeds, `4000 0000 0000 0002` is declined). No payment is processed and no email is sent. Card data is never stored; only the booking result is saved in `localStorage` (`aurora-bookings`).
+- PDF voucher with a vector QR code in EN/PL/UA (DejaVu Sans embedded), generated in the browser on demand.
+- Guest account at `/account/` (list, cancel, voucher) and favourites (`aurora-favorites`). The confirmation shows confetti and a preview of the confirmation email, labelled as a demo.
+- Not yet recorded here: Lighthouse for the stay page and `/account/`, and fresh stage-3 screenshots. They will be added separately; see [validation](docs/VALIDATION.md).
 
 ## Stage-1 verification
 
