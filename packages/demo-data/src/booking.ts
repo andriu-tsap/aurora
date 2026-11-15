@@ -1,4 +1,4 @@
-import type { Stay } from "@aurora/types";
+import type { Season, Stay } from "@aurora/types";
 
 /** Calendar day as "YYYY-MM-DD" (UTC, no time zones involved). */
 export type IsoDate = string;
@@ -50,10 +50,15 @@ const busyCache = new Map<string, Set<IsoDate>>();
  * Fictional, deterministic occupancy: the same nights are "booked" for every
  * visitor. Each stay gets blocks of 2–5 nights separated by 4–12 free nights.
  */
-export function busyNights(stay: Stay): Set<IsoDate> {
-  const cached = busyCache.get(stay.slug);
+export function busyNights(stay: Pick<Stay, "slug">): Set<IsoDate> {
+  return busyNightsForSlug(stay.slug);
+}
+
+/** Same nights as `busyNights`, for listings that are not catalogue stays (owner-added ones). */
+export function busyNightsForSlug(slug: string): Set<IsoDate> {
+  const cached = busyCache.get(slug);
   if (cached) return cached;
-  const rnd = prng(hash(stay.slug));
+  const rnd = prng(hash(slug));
   const busy = new Set<IsoDate>();
   let day = Math.floor(rnd() * 6);
   while (day < HORIZON_DAYS) {
@@ -61,7 +66,7 @@ export function busyNights(stay: Stay): Set<IsoDate> {
     for (let i = 0; i < length; i++) busy.add(addDays(EPOCH, day + i));
     day += length + 4 + Math.floor(rnd() * 9);
   }
-  busyCache.set(stay.slug, busy);
+  busyCache.set(slug, busy);
   return busy;
 }
 
@@ -93,7 +98,10 @@ function inSeason(monthDay: string, from: string, to: string): boolean {
 }
 
 /** Nightly price in cents for one night, applying the first matching season. */
-export function nightPriceCents(stay: Stay, night: IsoDate): number {
+export function nightPriceCents(
+  stay: { nightlyCents: number; seasons: readonly Season[] },
+  night: IsoDate,
+): number {
   const monthDay = night.slice(5);
   const season = stay.seasons.find((s) => inSeason(monthDay, s.from, s.to));
   const bp = season ? season.multiplierBp : 10000;
