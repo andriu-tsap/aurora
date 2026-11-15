@@ -1,0 +1,166 @@
+:host {
+  display: block;
+}
+.cal {
+  background: var(--surface);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 16px;
+  padding: clamp(0.9rem, 3vw, 1.4rem);
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.head h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+.pick label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+select {
+  min-height: 44px;
+  max-width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 10px;
+  padding: 0 0.7rem;
+  font: inherit;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.month {
+  margin: 0;
+  font: 700 1.15rem "Space Grotesk", Inter, sans-serif;
+  text-align: center;
+  text-transform: capitalize;
+}
+.step {
+  min-width: 44px;
+  padding: 0.4rem 0.8rem;
+}
+.step[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.step[aria-disabled="true"]:hover {
+  border-color: rgb(255 255 255 / 0.22);
+}
+.hint {
+  margin: 0.6rem 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+.grid th {
+  padding: 0.25rem 0;
+  font: 600 0.8rem Inter, sans-serif;
+  color: var(--muted);
+  text-align: center;
+}
+.grid abbr {
+  text-decoration: none;
+  cursor: help;
+}
+.day,
+.pad {
+  height: 3.1rem;
+  border-radius: 8px;
+}
+.day {
+  position: relative;
+  padding: 0.2rem 0.3rem;
+  vertical-align: top;
+  text-align: left;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: var(--bg);
+  color: var(--text);
+}
+.day:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 1px;
+  z-index: 1;
+}
+.day[aria-current="date"] {
+  border: 2px solid var(--coral);
+}
+.num {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.glyph {
+  position: absolute;
+  right: 0.3rem;
+  bottom: 0.1rem;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+/* Busy: diagonal hatching + a cross. Guest: solid fill + a diamond. Free: plain. */
+.day[data-state="busy"],
+.sw[data-state="busy"] {
+  background:
+    repeating-linear-gradient(135deg, rgb(139 92 255 / 0.5) 0 4px, transparent 4px 9px), var(--bg);
+  border-color: rgb(139 92 255 / 0.8);
+}
+.day[data-state="guest"],
+.sw[data-state="guest"] {
+  background: var(--mint);
+  border-color: var(--mint);
+  color: #04130f;
+}
+.summary {
+  margin: 0.9rem 0 0.6rem;
+  font-weight: 600;
+}
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  font-size: 0.9rem;
+}
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sw {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 6px;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  background: var(--bg);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+@media (max-width: 420px) {
+  .day,
+  .pad {
+    height: 2.7rem;
+  }
+  .grid {
+    border-spacing: 2px;
+  }
+}

@@ -1,0 +1,101 @@
+<section class="cal" aria-labelledby="cal-title" data-testid="occupancy-calendar">
+  <div class="head">
+    <h2 id="cal-title">{{ i18n.t().calTitle }}</h2>
+    <div class="pick">
+      <label for="cal-property">{{ i18n.t().calProperty }}</label>
+      <select id="cal-property" data-testid="cal-property" (change)="choose($event)">
+        @for (r of rows(); track r.slug) {
+          <option [value]="r.slug" [selected]="r.slug === row().slug">{{ r.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button
+      type="button"
+      class="btn step"
+      data-testid="cal-prev"
+      [attr.aria-label]="i18n.t().calPrev"
+      [attr.aria-disabled]="canPrev() ? null : 'true'"
+      (click)="go(-1)"
+    >
+      <span aria-hidden="true">←</span>
+    </button>
+    <h3 class="month" data-testid="cal-month">{{ i18n.monthYear(month()) }}</h3>
+    <button
+      type="button"
+      class="btn step"
+      data-testid="cal-next"
+      [attr.aria-label]="i18n.t().calNext"
+      [attr.aria-disabled]="canNext() ? null : 'true'"
+      (click)="go(1)"
+    >
+      <span aria-hidden="true">→</span>
+    </button>
+  </div>
+
+  <p class="hint" id="cal-keys">{{ i18n.t().calKeys }}</p>
+
+  <table
+    class="grid"
+    role="grid"
+    aria-readonly="true"
+    aria-describedby="cal-keys"
+    data-testid="cal-grid"
+    [attr.aria-label]="gridLabel()"
+    (keydown)="onKey($event)"
+  >
+    <thead>
+      <tr>
+        @for (i of weekdays; track i) {
+          <th scope="col">
+            <abbr [attr.title]="i18n.weekday(i, 'long')">{{ i18n.weekday(i, "short") }}</abbr>
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (week of weeks(); track $index) {
+        <tr>
+          @for (cell of week; track $index) {
+            @if (cell) {
+              <td
+                role="gridcell"
+                class="day"
+                [attr.data-date]="cell.date"
+                [attr.data-state]="cell.state"
+                [attr.tabindex]="cell.date === focus() ? 0 : -1"
+                [attr.aria-label]="cell.label"
+                [attr.aria-current]="cell.date === today ? 'date' : null"
+                (focus)="focus.set(cell.date)"
+              >
+                <span class="num" aria-hidden="true">{{ cell.day }}</span>
+                <span class="glyph" aria-hidden="true">{{ glyph(cell.state) }}</span>
+              </td>
+            } @else {
+              <td class="pad" role="gridcell" aria-hidden="true"></td>
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <p class="summary" role="status" data-testid="cal-summary">
+    {{ i18n.monthYear(month()) }}: {{ summary() }}
+  </p>
+
+  <ul class="legend" [attr.aria-label]="i18n.t().calLegend" data-testid="cal-legend">
+    <li><span class="sw" data-state="free" aria-hidden="true"></span>{{ i18n.t().legFree }}</li>
+    <li>
+      <span class="sw" data-state="busy" aria-hidden="true">{{ glyph("busy") }}</span
+      >{{ i18n.t().legBusy }}
+    </li>
+    <li>
+      <span class="sw" data-state="guest" aria-hidden="true">{{ glyph("guest") }}</span
+      >{{ i18n.t().legGuest }}
+    </li>
+  </ul>
+  <p class="hint">{{ i18n.t().calGuestNote }}</p>
+</section>
