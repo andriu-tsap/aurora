@@ -23,6 +23,15 @@ try {
   );
   await writeFile("qa/lighthouse/scores.json", JSON.stringify(scores, null, 2));
   console.log(scores);
+  for (const [id, audit] of Object.entries(result.lhr.audits)) {
+    if (audit.score !== null && audit.score < 0.9)
+      console.log(
+        id,
+        audit.score,
+        audit.displayValue || "",
+        audit.description?.slice(0, 100),
+      );
+  }
 } finally {
   await chrome.kill();
 }

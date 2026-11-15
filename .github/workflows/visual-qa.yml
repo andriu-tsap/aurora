@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
 permissions:
-  contents: read
+  contents: write
 jobs:
   visual-qa:
     runs-on: ubuntu-latest
@@ -33,3 +33,15 @@ jobs:
         with:
           name: stage-1-visual-qa
           path: qa/
+      - name: Save review evidence in a dedicated branch
+        if: always()
+        run: |
+          mkdir -p docs/visual-reviews/stage-1 docs/lighthouse
+          cp -r qa/screenshots/. docs/visual-reviews/stage-1/ || true
+          cp -r qa/lighthouse/. docs/lighthouse/ || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b evidence/stage-1-${{ github.run_id }}
+          git add docs/visual-reviews docs/lighthouse
+          git diff --cached --quiet || git commit -m "docs: capture stage one visual review evidence"
+          git push origin HEAD

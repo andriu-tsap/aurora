@@ -1,4 +1,5 @@
 import http from "node:http";
+import { gzipSync } from "node:zlib";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 const root = path.resolve("apps/web/out");
@@ -34,7 +35,12 @@ http
         mime[path.extname(target)] || "application/octet-stream",
       );
       res.setHeader("Cache-Control", "public, max-age=3600");
-      res.end(await readFile(target));
+      const body = await readFile(target);
+      if (req.headers["accept-encoding"]?.includes("gzip")) {
+        res.setHeader("Content-Encoding", "gzip");
+        res.setHeader("Vary", "Accept-Encoding");
+        res.end(gzipSync(body));
+      } else res.end(body);
     } catch {
       res.writeHead(404).end("Not found");
     }

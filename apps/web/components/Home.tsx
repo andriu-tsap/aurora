@@ -174,6 +174,7 @@ function Landing({
           <label className="language">
             <span className="sr-only">{t("language")}</span>
             <select
+              aria-label={t("language")}
               value={locale}
               onChange={(e) => setLocale(e.target.value as Locale)}
             >
