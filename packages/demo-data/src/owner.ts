@@ -320,3 +320,52 @@ export function fitWithin(
     height: Math.max(1, Math.round(height * scale)),
   };
 }
+
+/** Form text like "12,50" or "12.5" -> cents; null when it is not a plain non-negative amount. */
+export function parseEuro(text: string): number | null {
+  const t = text.trim().replace(",", ".");
+  if (!/^\d{1,7}(\.\d{1,2})?$/.test(t)) return null;
+  return Math.round(Number(t) * 100);
+}
+
+/** Starting values for the edit form. */
+export function rowToDraft(row: OwnerStayRow): StayDraft {
+  return {
+    name: row.name,
+    region: row.region,
+    maxGuests: row.maxGuests,
+    nightlyCents: row.nightlyCents,
+    cleaningFeeCents: row.cleaningFeeCents,
+    weeklyDiscountBp: row.weeklyDiscountBp,
+    minNights: row.minNights,
+    amenities: [...row.amenities],
+  };
+}
+
+export const emptyDraft = (): StayDraft => ({
+  name: "",
+  region: "carpathians",
+  maxGuests: 2,
+  nightlyCents: 10000,
+  cleaningFeeCents: 3000,
+  weeklyDiscountBp: 1000,
+  minNights: 2,
+  amenities: [],
+});
+
+export const ALL_AMENITIES: readonly Amenity[] = [
+  "sauna",
+  "hot-tub",
+  "fireplace",
+  "wifi",
+  "kitchen",
+  "workspace",
+  "pet-friendly",
+  "parking",
+  "ev-charger",
+  "lake-view",
+  "sea-view",
+  "mountain-view",
+];
+
+export const ALL_REGIONS: readonly RegionId[] = REGIONS;

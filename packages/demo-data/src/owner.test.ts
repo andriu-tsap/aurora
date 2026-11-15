@@ -4,7 +4,10 @@ import {
   emptyOwnerState,
   fitWithin,
   MAX_PHOTOS,
+  emptyDraft,
   ownerRows,
+  parseEuro,
+  rowToDraft,
   parseOwnerState,
   removeCustom,
   resetEdits,
@@ -103,5 +106,26 @@ describe("validation and helpers", () => {
     expect(fitWithin(4000, 3000, 1600)).toEqual({ width: 1600, height: 1200 });
     expect(fitWithin(800, 600, 1600)).toEqual({ width: 800, height: 600 });
     expect(fitWithin(0, 10, 100)).toEqual({ width: 0, height: 0 });
+  });
+});
+
+describe("form helpers", () => {
+  it("parses euro text with comma or dot", () => {
+    expect(parseEuro("140")).toBe(14000);
+    expect(parseEuro(" 12,5 ")).toBe(1250);
+    expect(parseEuro("0.05")).toBe(5);
+    for (const bad of ["", "-1", "1e3", "12.345", "abc", "1,2,3"])
+      expect(parseEuro(bad)).toBeNull();
+  });
+
+  it("round-trips a row into a valid draft", () => {
+    const row = ownerRows(stays, emptyOwnerState())[0];
+    const d = rowToDraft(row);
+    expect(validateDraft(d)).toEqual({});
+    expect(d.amenities).not.toBe(row.amenities);
+  });
+
+  it("starts the add form with sensible but not yet valid name", () => {
+    expect(Object.keys(validateDraft(emptyDraft()))).toEqual(["name"]);
   });
 });
