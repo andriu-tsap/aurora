@@ -1,4 +1,4 @@
-import { regions } from "@aurora/demo-data";
+import { regions } from "@aurora/demo-data/regions";
 import type { CountryCode, RegionId } from "@aurora/types";
 
 import type { MessageKey } from "./i18n";

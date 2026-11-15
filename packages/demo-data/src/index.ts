@@ -1,14 +1,12 @@
 import type { Region, RegionId, Season, Stay } from "@aurora/types";
 
-import regionList from "./regions.json";
+import { regions } from "./regions";
 
 /**
  * Fictional demo catalogue. Names, coordinates and prices are invented for a
  * portfolio concept; they do not describe real businesses or properties.
  */
-export const regions = regionList as Region[];
-
-export const regionIds = regions.map((r) => r.id);
+export { regions, regionIds } from "./regions";
 
 export function getRegion(id: RegionId): Region {
   const region = regions.find((r) => r.id === id);
@@ -380,3 +378,5 @@ export function getStay(slug: string): Stay | undefined {
 export function staysInRegion(id: RegionId): Stay[] {
   return stays.filter((s) => s.region === id);
 }
+
+export * from "./filter";

@@ -5,9 +5,11 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./regions": "./src/regions.ts",
     "./regions.json": "./src/regions.json"
   },
   "dependencies": {
     "@aurora/types": "workspace:*"
-  }
+  },
+  "sideEffects": false
 }
