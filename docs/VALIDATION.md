@@ -76,22 +76,22 @@ Order agreed with the owner: Lighthouse → demo data → 3D cabin → owner rev
 
 ## Stage 3 — booking, demo payment, PDF voucher, guest account, favourites (2026-11-15)
 
-Status: implemented, waiting for the owner's "OK". **Lighthouse (stay page, `/account/`, home) and the fresh stage-3 screenshots are not part of this revision: they are being produced separately and will be added to this section and to `docs/visual-reviews/stage-3/`.**
+Status: implemented, waiting for the owner's "OK". Fresh screenshots are in `docs/visual-reviews/stage-3/` (with a self-assessment), Lighthouse results are below.
 
 ### Verified
 
 - Locally in the sandbox (earlier session, at `cf2d32a`): lint, typecheck, Playwright booking test: dates picked in the calendar, quote shown, invalid card -> "Use a test card number", `4000 0000 0000 0002` -> declined message, `4242 4242 4242 4242` -> confirmed with reference, `localStorage` holds the reference and no card digits, PDF downloads (starts with `%PDF-`, > 10 kB), account lists and cancels the booking (persists after reload). Phone 390: no horizontal overflow, dialog inside the viewport, Escape returns focus to "Reserve". The English voucher QR decoded with OpenCV to `/account/?ref=<reference>`.
 - Voucher PL and UA (this session, at `692f905`): the real `buildVoucher` was run in Node for EN, PL and UA with long names containing Ł ż ś ń ó ź Ї Ґ Є, rasterised with poppler and inspected by eye. Polish diacritics and Ukrainian Cyrillic render correctly with the embedded DejaVu Sans. This found a real layout bug: long values wrapped onto a second line and overlapped the next label. Fixed in `fix(voucher): wrap long values without overlapping the next label`; UA re-rendered after the fix and the overlap is gone.
 - This session, after the voucher fix: `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` (21/21) and `NEXT_PUBLIC_BASE_PATH=/aurora pnpm build` passed.
+- Full Playwright suite at head `963eab0` (voucher fix + docs): **27/27 passed** in ~4 min on a local Chrome with software WebGL (includes booking, confirmation, favourites, catalogue, cabin and hero tests).
+- Lighthouse mobile, local static server with gzip, three runs on the home page: performance 97 / 98 / 96, accessibility 100, best practices 100, SEO 100 (`docs/lighthouse/stage-3-scores.json`). Other pages, one run: `/stays/` 96, `/stays/halny-ridge/` 97, `/account/` 99, `/cabin/` 97 performance; accessibility and best practices 100 everywhere. `/account/` SEO is 63 **by design**: the page is `noindex` because it is a private demo account. These are lab numbers, not real-device or CI numbers.
+- Screenshots of catalogue covers, favourites, confirmation (confetti and email preview, EN and PL), account and vouchers EN/PL/UA: `docs/visual-reviews/stage-3/`, inspected by eye. The map basemap is stubbed there (see its README).
 - OpenFreeMap tiles: verified by owner on live site.
 
 ### Not verified
 
-- `pnpm test:e2e` for the current head (`692f905`): the session had no Chromium and Playwright's download was blocked. The owner's handoff states 27/27 at `c81bab9`; I did not re-run it. The owner will run it in another session.
-- Lighthouse mobile for the home page (target >= 90), `/stays/<slug>/` and `/account/`; fresh Playwright screenshots (1440 and 390) of catalogue covers, favourites, confirmation with email preview, vouchers EN/PL/UA. Pending, produced separately.
-- Polish voucher after the layout fix was regenerated but only the UA render was re-inspected.
+- Lighthouse in the project's CI (the numbers above are local); UA confirmation screenshot; a 1440 confirmation dialog capture (the desktop stay page loads software-WebGL 3D and is too slow to capture reliably here).
 - Vouchers in real desktop/mobile PDF viewers (only poppler), screen-reader behaviour of the calendar, real phones, the deployed site for this commit.
-- Confetti and the confirmation-email preview were not re-checked in this session.
 
 ### By design (demo)
 

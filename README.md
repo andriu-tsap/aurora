@@ -61,7 +61,7 @@ Final handoff after the accepted stages: one source ZIP excluding dependencies/s
 - Checkout is a demo form: only test cards work (`4242 4242 4242 4242` succeeds, `4000 0000 0000 0002` is declined). No payment is processed and no email is sent. Card data is never stored; only the booking result is saved in `localStorage` (`aurora-bookings`).
 - PDF voucher with a vector QR code in EN/PL/UA (DejaVu Sans embedded), generated in the browser on demand.
 - Guest account at `/account/` (list, cancel, voucher) and favourites (`aurora-favorites`). The confirmation shows confetti and a preview of the confirmation email, labelled as a demo.
-- Not yet recorded here: Lighthouse for the stay page and `/account/`, and fresh stage-3 screenshots. They will be added separately; see [validation](docs/VALIDATION.md).
+- Verified: full browser suite 27/27; Lighthouse mobile (local lab) home 96–98, `/stays/<slug>/` 97, `/account/` 99 performance, accessibility 100. Screenshots with a self-assessment: [stage 3](docs/visual-reviews/stage-3/). Details and limits: [validation](docs/VALIDATION.md).
 
 ## Stage-1 verification
 

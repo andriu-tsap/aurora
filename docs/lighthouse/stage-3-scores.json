@@ -1,0 +1,40 @@
+{
+  "run": "2026-11-15, local sandbox, head 963eab0 + gzip static server, run 3 of 3",
+  "home": {
+    "performance": 96,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "pages": {
+    "stays/": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "stays/halny-ridge/": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "account/": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 63
+    },
+    "cabin/": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    }
+  },
+  "home_all_runs_performance": [
+    97,
+    98,
+    96
+  ]
+}

@@ -25,7 +25,7 @@ try {
   console.log(scores);
   // Report-only scores for the stage-2 pages (never a deploy gate).
   const pages = {};
-  for (const path of ["stays/", "stays/halny-ridge/", "cabin/"]) {
+  for (const path of ["stays/", "stays/halny-ridge/", "account/", "cabin/"]) {
     const page = await lighthouse(`http://127.0.0.1:4173/aurora/${path}`, {
       port: chrome.port,
       output: "json",
