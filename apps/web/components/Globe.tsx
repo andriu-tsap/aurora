@@ -69,7 +69,7 @@ function World({ active, onSelect, onReady, reduced, paused, mobile }: Props) {
     );
     group.current.rotation.x = THREE.MathUtils.damp(
       group.current.rotation.x,
-      0.4 + (reduced ? 0 : state.pointer.y * 0.025),
+      0.84 + (reduced ? 0 : state.pointer.y * 0.025),
       2,
       delta,
     );
@@ -81,7 +81,7 @@ function World({ active, onSelect, onReady, reduced, paused, mobile }: Props) {
       );
   });
   return (
-    <group ref={group} rotation={[0.4, -0.26, -0.04]}>
+    <group ref={group} rotation={[0.84, -0.36, -0.02]}>
       <mesh>
         <sphereGeometry args={[2, 64, 48]} />
         <meshStandardMaterial

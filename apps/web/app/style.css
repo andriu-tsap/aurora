@@ -963,3 +963,110 @@ footer a {
   transform: rotate(-18deg);
   border-radius: 50%;
 }
+/* Accepted stage-one review corrections. */
+@media (min-width: 768px) {
+  .hero {
+    height: calc(100svh - 240px);
+    min-height: 650px;
+    max-height: 740px;
+    padding-top: 35px;
+    padding-bottom: 70px;
+  }
+  .visual {
+    height: 96%;
+    top: 0;
+  }
+  .hero-bottom {
+    bottom: 22px;
+  }
+  .story {
+    padding-top: 75px;
+  }
+  .hero-copy h1 {
+    margin: 20px 0;
+  }
+  .popular-label {
+    margin-top: 30px;
+  }
+}
+@media (max-width: 767px) {
+  .visual-caption {
+    bottom: 19%;
+    width: 95%;
+  }
+  .enable-globe {
+    bottom: 0;
+  }
+  .regions {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1px;
+    padding: 2px 1px 10px;
+    width: 100%;
+    min-width: 0;
+  }
+  .region {
+    flex: 0 0 64%;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 112px;
+    padding: 13px 15px;
+  }
+  .region-index {
+    margin-bottom: 10px;
+  }
+  .region strong {
+    min-height: 28px;
+    font-size: 13px;
+  }
+  .region small {
+    margin-top: auto;
+    font-size: 10px;
+  }
+  .popular-label {
+    margin-top: 26px;
+  }
+  .globe-label {
+    top: 34%;
+  }
+  .visual {
+    margin-bottom: 6px;
+  }
+}
+@media (max-width: 374px) {
+  .search {
+    display: grid;
+    grid-template-columns: 35px 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+  .search label {
+    padding: 4px 0;
+  }
+  .search button {
+    grid-column: 1/-1;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    min-height: 46px;
+  }
+  .search select {
+    font-size: 12px;
+  }
+  .search button span {
+    font-size: 18px;
+  }
+  .visual-caption {
+    font-size: 6.5px;
+  }
+  .region {
+    flex-basis: 72%;
+  }
+}

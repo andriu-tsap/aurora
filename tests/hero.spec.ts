@@ -49,6 +49,13 @@ test("mobile 390: static first, no 3D request before interaction, then opt in", 
   await page.waitForTimeout(2000);
   await expect(page.locator("canvas")).toHaveCount(0);
   await expect(page.locator(".globe-poster")).toBeVisible();
+  const caption = await page.locator(".visual-caption").boundingBox();
+  const activate = await page
+    .getByRole("button", { name: "Explore in 3D" })
+    .boundingBox();
+  expect(
+    caption && activate && caption.y + caption.height <= activate.y,
+  ).toBeTruthy();
   await page.screenshot({ path: "qa/screenshots/hero-390.png" });
   const before = requests.length;
   await page.getByRole("button", { name: "Explore in 3D" }).click();
@@ -69,6 +76,12 @@ test("mobile 390: static first, no 3D request before interaction, then opt in", 
 test("360px all languages have no horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 900 });
   await page.goto("");
+  await page.screenshot({ path: "qa/screenshots/hero-360.png" });
+  const field = await page.locator(".search label").boundingBox();
+  const button = await page
+    .getByRole("button", { name: "Explore the region" })
+    .boundingBox();
+  expect(field && button && button.y >= field.y + field.height).toBeTruthy();
   for (const language of ["en", "pl", "uk"]) {
     await page.locator(".language select").selectOption(language);
     expect(
