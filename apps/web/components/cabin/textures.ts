@@ -113,18 +113,22 @@ export function createWoodTextures(look: WoodLook, seed = 7) {
         ctx.lineTo(x + len * rand(), y + 4 + rand() * 7);
         ctx.stroke();
       }
-      rctx.fillStyle = `rgb(${Math.round((0.45 + rand() * 0.2) * 255)},0,0)`;
+      rctx.fillStyle = `rgba(${Math.round((0.66 + rand() * 0.1) * 255)},0,0,0.5)`;
       rctx.fillRect(x, y - 1, len, 2);
     }
   } else {
-    for (let i = 0; i < 400; i++) {
-      rctx.fillStyle = `rgb(${Math.round((look.roughness + (rand() - 0.5) * 0.18) * 255)},0,0)`;
-      rctx.fillRect(
-        rand() * size,
-        rand() * size,
-        40 + rand() * 160,
-        1 + rand() * 2,
-      );
+    // Soft, low-contrast roughness variation. Thin high-contrast strokes
+    // produced sparkling dashes under strong lamps at night.
+    for (let i = 0; i < 120; i++) {
+      const x = rand() * size;
+      const y = rand() * size;
+      const r = 60 + rand() * 140;
+      const g = rctx.createRadialGradient(x, y, 0, x, y, r);
+      const v = Math.round((look.roughness + (rand() - 0.5) * 0.08) * 255);
+      g.addColorStop(0, `rgba(${v},0,0,0.5)`);
+      g.addColorStop(1, `rgba(${v},0,0,0)`);
+      rctx.fillStyle = g;
+      rctx.fillRect(x - r, y - r, r * 2, r * 2);
     }
   }
   ctx.globalAlpha = 1;
@@ -141,36 +145,36 @@ export function createWoodTextures(look: WoodLook, seed = 7) {
   return { map: finish(c, true, 0.5), roughnessMap: finish(rc, false, 0.5) };
 }
 
-/** Moss/meadow ground: low-frequency patches plus fine speckle. */
+/** Soft moss/meadow ground: gentle low-frequency patches plus fine speckle. */
 export function createGroundTexture(night: boolean, seed = 11) {
   const size = 1024;
   const rand = seeded(seed);
   const { c, ctx } = canvas(size);
-  ctx.fillStyle = night ? "#252b1c" : "#4d5436";
+  ctx.fillStyle = night ? "#252b1c" : "#5f6440";
   ctx.fillRect(0, 0, size, size);
   const palette = [
-    "#474e33",
-    "#5a5f3d",
-    "#3c4230",
-    "#6b6448",
-    "#525839",
-    "#77704f",
-    "#5f5a44",
+    "#565d3b",
+    "#6a6c45",
+    "#4c5236",
+    "#7a7150",
+    "#61673f",
+    "#857b56",
+    "#6b6549",
   ];
   for (let i = 0; i < 260; i++) {
     const x = rand() * size;
     const y = rand() * size;
     const r = 30 + rand() * 120;
     const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, palette[Math.floor(rand() * palette.length)] + "aa");
+    g.addColorStop(0, palette[Math.floor(rand() * palette.length)] + "66");
     g.addColorStop(1, "#00000000");
     ctx.fillStyle = g;
     ctx.fillRect(x - r, y - r, r * 2, r * 2);
   }
-  for (let i = 0; i < 26000; i++) {
+  for (let i = 0; i < 42000; i++) {
     ctx.fillStyle = palette[Math.floor(rand() * palette.length)];
-    ctx.globalAlpha = 0.35 + rand() * 0.5;
-    ctx.fillRect(rand() * size, rand() * size, 1.5, 1.5 + rand() * 3);
+    ctx.globalAlpha = 0.25 + rand() * 0.35;
+    ctx.fillRect(rand() * size, rand() * size, 1, 1 + rand() * 1.5);
   }
   ctx.globalAlpha = 1;
   return finish(c, true, 26);

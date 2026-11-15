@@ -42,15 +42,15 @@ export const cabinConfig = {
     depth: 3.1,
     /** Kept inside the roof span so the eaves never cut through the deck. */
     width: 5.8,
-    board: { width: 0.14, thickness: 0.03, gap: 0.006, bevel: 0.009 },
+    board: { width: 0.14, thickness: 0.03, gap: 0.006, bevel: 0.008 },
     joistSpacing: 0.5,
     rimDepth: 0.22,
   },
   stairs: { width: 1.6, rise: 0.2, run: 0.3 },
   railing: { height: 1.0, postSize: 0.06, postSpacing: 1.45, bars: 5 },
   chimney: { x: 0.55, z: -0.05, radius: 0.11, aboveRidge: 0.65 },
-  /** Wall lanterns sit on the door jambs, either side of the entrance. */
-  lantern: { x: 1.13, heightAboveFloor: 1.85 },
+  /** Post-cap lanterns on the two railing posts that flank the stairs. */
+  lantern: { size: 0.16, height: 0.3 },
   pier: { size: 0.32 },
 } as const;
 

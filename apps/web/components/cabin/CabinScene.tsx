@@ -39,7 +39,7 @@ type Props = {
 
 const palette = {
   // Fog colour matches the sky horizon so the ground melts into it.
-  day: { sky: "#e2d0b7", fogNear: 24, fogFar: 82 },
+  day: { sky: "#e8c9a4", fogNear: 26, fogFar: 85 },
   night: { sky: "#141c33", fogNear: 20, fogFar: 72 },
 };
 
@@ -97,9 +97,7 @@ function Lighting({ night, mobile }: { night: boolean; mobile: boolean }) {
   return (
     <>
       <hemisphereLight
-        args={
-          night ? ["#2a3a66", "#0d120c", 0.1] : ["#dfe7ee", "#5a5c40", 0.12]
-        }
+        args={night ? ["#2a3a66", "#0d120c", 0.1] : ["#c9d3e0", "#4a4a34", 0.1]}
       />
       {night ? (
         <directionalLight
@@ -117,12 +115,13 @@ function Lighting({ night, mobile }: { night: boolean; mobile: boolean }) {
           />
         </directionalLight>
       ) : (
-        // Low golden-hour sun (~28°) from the front-left: warm light on the
-        // glass gable and deck, long shadows across the meadow. Key:fill ≈ 4:1.
+        // Golden hour: sun ~17° above the horizon from the west-southwest, warm
+        // and strong against a cool, dim fill. Shadows run long across the
+        // meadow to the right of the cabin, where the camera sees them.
         <directionalLight
-          color="#ffcf9a"
-          intensity={3.6}
-          position={[-11.5, 7.2, 9.5]}
+          color="#ffb46a"
+          intensity={5.2}
+          position={[-14.5, 4.6, 5.2]}
           castShadow
           shadow-mapSize={[shadowSize, shadowSize]}
           shadow-bias={-0.0003}
@@ -130,7 +129,7 @@ function Lighting({ night, mobile }: { night: boolean; mobile: boolean }) {
         >
           <orthographicCamera
             attach="shadow-camera"
-            args={[-14, 14, 14, -14, 1, 50]}
+            args={[-19, 19, 19, -19, 1, 60]}
           />
         </directionalLight>
       )}
@@ -139,7 +138,7 @@ function Lighting({ night, mobile }: { night: boolean; mobile: boolean }) {
         key={night ? "env-night" : "env-day"}
         resolution={256}
         frames={1}
-        environmentIntensity={night ? 0.26 : 0.42}
+        environmentIntensity={night ? 0.26 : 0.34}
       >
         <color attach="background" args={[night ? "#070b18" : "#c9d4dc"]} />
         {night ? (
@@ -226,7 +225,7 @@ function Scene({ options, mobile, reduced, resetKey, onReady }: Props) {
     <>
       <color attach="background" args={[sky.sky]} />
       <fog attach="fog" args={[sky.sky, sky.fogNear, sky.fogFar]} />
-      {!mobile && <SoftShadows size={22} samples={14} focus={0.55} />}
+      {!mobile && <SoftShadows size={12} samples={14} focus={0.7} />}
       <Lighting night={night} mobile={mobile} />
       <CabinModel options={options} animate={active && !reduced} />
       <Landscape night={night} />
@@ -259,7 +258,7 @@ function Scene({ options, mobile, reduced, resetKey, onReady }: Props) {
       />
       <CameraRig resetKey={resetKey} />
       {mobile ? (
-        <EffectComposer multisampling={0} enableNormalPass={false}>
+        <EffectComposer multisampling={4} enableNormalPass={false}>
           <Bloom
             luminanceThreshold={1.4}
             luminanceSmoothing={0.15}

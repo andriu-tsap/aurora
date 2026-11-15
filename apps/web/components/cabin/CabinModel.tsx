@@ -511,6 +511,17 @@ function Deck({
   const b = d.board;
   const z0 = D / 2 + 0.02;
   const zEnd = z0 + d.depth;
+  // Shaded timber seen through the 6 mm board gaps. Without it the gaps
+  // opened onto black and the regular pattern caused moiré at a distance.
+  const gapFill = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#4a3527",
+        roughness: 1,
+        envMapIntensity: 0.4,
+      }),
+    [],
+  );
   const boardGeo = useMemo(
     () => beveledBox(d.width, b.thickness, b.width, b.bevel),
     [d.width, b.thickness, b.width, b.bevel],
@@ -657,13 +668,25 @@ function Deck({
 
   return (
     <group>
+      {/* Boards do not self-shadow (grazing self-shadowing of 30 mm boards
+          shimmered). A slab just below them fills the gaps with shaded timber
+          and casts the deck's shadow onto the ground. */}
       <Instances
         geometry={boardGeo}
         material={deckWood}
         items={boards}
         tint={0.16}
         uvJitter
+        castShadow={false}
       />
+      <mesh
+        position={[0, F - b.thickness - 0.006, z0 + d.depth / 2]}
+        material={gapFill}
+        castShadow
+        receiveShadow
+      >
+        <boxGeometry args={[d.width, 0.01, d.depth]} />
+      </mesh>
       <Instances
         geometry={beam}
         material={wood}
@@ -684,6 +707,7 @@ function Deck({
         items={treads}
         tint={0.16}
         uvJitter
+        castShadow={false}
       />
       {[-1, 1].map((sx) => (
         <mesh
@@ -817,8 +841,10 @@ function Lantern({
   glow: THREE.Material;
   night: boolean;
 }) {
-  const y = F + C.lantern.heightAboveFloor;
-  const z = D / 2 + 0.16;
+  // Sits on top of the stair-side railing post (post + handrail + cap).
+  const zEnd = D / 2 + 0.02 + C.deck.depth;
+  const y = F + C.railing.height + 0.045 + C.lantern.height / 2 + 0.012;
+  const z = zEnd - 0.05;
   const post = useMemo(() => beveledBox(0.016, 0.26, 0.016, 0.004, "y"), []);
   const plate = useMemo(() => beveledBox(0.16, 0.025, 0.16, 0.006), []);
   return (
@@ -842,16 +868,14 @@ function Lantern({
       <mesh material={glow}>
         <cylinderGeometry args={[0.045, 0.045, 0.22, 20]} />
       </mesh>
-      <mesh material={metal} position={[0, 0.03, -0.11]}>
-        <boxGeometry args={[0.03, 0.03, 0.1]} />
-      </mesh>
+
       {night && (
         <pointLight
           color="#ffb877"
           intensity={1.6}
           distance={5}
           decay={2}
-          position={[0, 0, 0.1]}
+          position={[0, 0.05, 0.12]}
         />
       )}
     </group>
@@ -1168,7 +1192,7 @@ export function CabinModel({
       {[-1, 1].map((sx) => (
         <Lantern
           key={sx}
-          x={sx * C.lantern.x}
+          x={sx * (C.stairs.width / 2 + 0.08)}
           metal={m.metal}
           glow={m.lampGlow}
           night={night}

@@ -71,31 +71,47 @@ function firGeometry() {
   return merged;
 }
 
+/**
+ * Weathered boulder: a subdivided sphere with low-frequency noise, flattened
+ * base and smooth normals, so edges read as worn and rounded, not faceted.
+ */
 function rockGeometry(seed: number) {
   const rand = seeded(seed);
-  const g = new THREE.IcosahedronGeometry(1, 1);
+  const g = new THREE.IcosahedronGeometry(1, 3);
   const pos = g.getAttribute("position");
-  for (let v = 0; v < pos.count; v++) {
-    const k = 0.78 + rand() * 0.38;
-    pos.setXYZ(v, pos.getX(v) * k, pos.getY(v) * k * 0.62, pos.getZ(v) * k);
+  const lobes = Array.from({ length: 5 }, () =>
+    new THREE.Vector3(rand() - 0.5, rand() - 0.3, rand() - 0.5).normalize(),
+  );
+  const weights = lobes.map(() => 0.08 + rand() * 0.14);
+  const v = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    let k = 1;
+    lobes.forEach((lobe, j) => {
+      k += Math.max(0, v.dot(lobe)) ** 2 * weights[j];
+    });
+    v.multiplyScalar(k);
+    v.y *= 0.58;
+    if (v.y < -0.2) v.y = -0.2 + (v.y + 0.2) * 0.3;
+    pos.setXYZ(i, v.x, v.y, v.z);
   }
-  const flat = g.toNonIndexed();
-  g.dispose();
-  flat.computeVertexNormals();
-  return flat;
+  g.computeVertexNormals();
+  return g;
 }
 
 // Spruces frame the cabin from behind and the sides (≈ 9–13 m tall).
 const trees: [number, number, number, number][] = [
   // x, z, height scale, yaw
-  [-7.6, -5.2, 1.18, 0.4],
-  [-10.8, -1.2, 0.98, 1.2],
-  [-5.2, -10.2, 1.32, 2.2],
-  [8.2, -4.4, 1.08, 0.9],
-  [11.4, 0.4, 0.9, 2.7],
-  [3.8, -11.6, 1.26, 1.7],
-  [-14.5, -8.5, 1.12, 0.2],
-  [15.2, -9.2, 1.22, 2.9],
+  [-7.6, -5.2, 1.22, 0.4],
+  [-10.8, -1.2, 0.86, 1.2],
+  [-5.2, -10.2, 1.4, 2.2],
+  [8.2, -4.4, 1.05, 0.9],
+  [11.4, 0.4, 0.74, 2.7],
+  [3.8, -11.6, 1.3, 1.7],
+  [-14.5, -8.5, 1.1, 0.2],
+  [15.2, -9.2, 1.28, 2.9],
+  [-12.6, 3.4, 0.62, 1.9],
+  [13.8, -3.0, 0.95, 0.6],
 ];
 
 /** Meadow tufts: six thin blades each, scattered around (not under) the cabin. */
@@ -108,9 +124,9 @@ function tuftGeometry() {
   );
   for (let b = 0; b < 6; b++) {
     const angle = (b / 6) * Math.PI * 2 + rand() * 0.5;
-    const lean = 0.18 + rand() * 0.22;
-    const w = 0.07;
-    const h = 0.4 + rand() * 0.25;
+    const lean = 0.12 + rand() * 0.16;
+    const w = 0.035;
+    const h = 0.32 + rand() * 0.22;
     const cx = Math.cos(angle);
     const cz = Math.sin(angle);
     // Blade: a slim triangle, tip leaning outward.
@@ -163,7 +179,7 @@ function tuftPlacements(count: number) {
     const z = Math.sin(a) * r + 1;
     // Keep clear of the cabin, deck and stairs footprint.
     if (Math.abs(x) < 3.6 && z > -4.6 && z < 9.2) continue;
-    const s = 0.3 + rand() * 0.22;
+    const s = 0.16 + rand() * 0.12;
     items.push(
       new THREE.Matrix4().compose(
         new THREE.Vector3(x, 0, z),
@@ -222,15 +238,31 @@ export function Landscape({ night }: { night: boolean }) {
     if (!mesh) return;
     const m = new THREE.Matrix4();
     const color = new THREE.Color();
+    const rand = seeded(91);
     trees.forEach(([x, z, s, yaw], i) => {
+      // Varied height/girth, a slight lean and per-tree needle tint so the
+      // instances never read as clones.
+      const girth = s * (0.82 + rand() * 0.3);
+      const tilt = new THREE.Euler(
+        (rand() - 0.5) * 0.07,
+        yaw,
+        (rand() - 0.5) * 0.07,
+      );
       m.compose(
         new THREE.Vector3(x, 0, z),
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)),
-        new THREE.Vector3(s * 0.95, s * 1.08, s * 0.95),
+        new THREE.Quaternion().setFromEuler(tilt),
+        new THREE.Vector3(girth, s * (0.9 + rand() * 0.35), girth),
       );
       mesh.setMatrixAt(i, m);
-      const k = 0.85 + (i % 3) * 0.1;
-      mesh.setColorAt(i, color.setRGB(k, k, k));
+      const light = 0.8 + rand() * 0.3;
+      mesh.setColorAt(
+        i,
+        color.setRGB(
+          light * (0.9 + rand() * 0.18),
+          light,
+          light * (0.88 + rand() * 0.22),
+        ),
+      );
     });
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
@@ -243,9 +275,8 @@ export function Landscape({ night }: { night: boolean }) {
   const rockMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#5f5c56",
-        roughness: 0.88,
-        flatShading: true,
+        color: "#4e4b46",
+        roughness: 0.86,
       }),
     [],
   );
@@ -260,7 +291,7 @@ export function Landscape({ night }: { night: boolean }) {
     [],
   );
   const tuftRef = useRef<THREE.InstancedMesh>(null);
-  const tufts = useMemo(() => tuftPlacements(2000), []);
+  const tufts = useMemo(() => tuftPlacements(700), []);
   useLayoutEffect(() => {
     const mesh = tuftRef.current;
     if (!mesh) return;
@@ -294,7 +325,7 @@ export function Landscape({ night }: { night: boolean }) {
           key={i}
           geometry={geometry}
           material={rockMaterial}
-          position={[x, s * 0.12, z]}
+          position={[x, s * 0.05, z]}
           rotation={[0, yaw, 0]}
           scale={s}
           castShadow
@@ -349,11 +380,11 @@ void main() {
       u.zenith.value.set("#050913");
       u.glow.value.set("#000000");
     } else {
-      u.horizon.value.set("#e7d2b6");
-      u.zenith.value.set("#7d91a5");
-      u.glow.value.set("#f6c48f");
+      u.horizon.value.set("#eec59a");
+      u.zenith.value.set("#7488a0");
+      u.glow.value.set("#ffad66");
     }
-    u.sunDir.value.set(-11.5, 4, 9.5).normalize();
+    u.sunDir.value.set(-14.5, 4.6, 5.2).normalize();
   }, [material, night]);
   return (
     <mesh
