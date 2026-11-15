@@ -82,3 +82,18 @@ export interface Stay extends LatLon {
   summary: Localized;
   description: Localized;
 }
+
+/** A demo booking kept only in the visitor's browser (no card data inside). */
+export interface Booking {
+  reference: string;
+  slug: string;
+  stayName: string;
+  guestName: string;
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  nights: number;
+  totalCents: number;
+  status: "confirmed" | "cancelled";
+  createdAt: string;
+}

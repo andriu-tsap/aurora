@@ -73,3 +73,11 @@ Order agreed with the owner: Lighthouse → demo data → 3D cabin → owner rev
 **Verified locally (sandbox):** lint, typecheck; Vitest 14/14; Playwright e2e 17/17 (hero 5, cabin 5, catalogue 6 + screenshots) on the static export under `/aurora/`; every globe region opens a non-empty catalogue; filters sync to URL; mobile 360 no horizontal overflow; lightbox keyboard nav and focus restore; JSON-LD present. Lighthouse mobile, home: 93, 95, 95, 93, 93, 93 (6 runs, all >= 90) after font self-hosting; /stays/, /stays/halny-ridge/, /cabin/: 94–96 (single runs, report-only).
 
 **Not verified:** real OpenFreeMap tiles (tests stub the style; screenshots show background + markers only); CI run of the new tests; real phones/GPUs/browsers other than local Chromium with software WebGL; deployed site after this push; Lighthouse variance on CI hardware.
+
+## Stage 3 — booking, demo payment, PDF voucher, guest account (2026-11-15)
+
+**Verified locally (sandbox):** lint, typecheck; Vitest 20/20 (6 new: deterministic busy nights, quote/weekly discount/cleaning, error cases, test-card check, references); Playwright e2e 20/20 on the static export. The booking test covers: dates picked in the calendar, quote shown, invalid card -> "Use a test card number", 4000… -> declined message, 4242… -> confirmed with reference, `localStorage` contains the reference and no card digits, PDF downloads (starts with `%PDF-`, > 10 kB), account lists and cancels the booking (persists after reload). Phone 390: no horizontal overflow, dialog inside viewport, Escape returns focus to "Reserve". The sample voucher was rendered to an image and checked by eye; its QR decoded with OpenCV to `/account/?ref=<reference>`.
+
+**Not verified:** live deploy of this commit; PDF in real desktop/mobile PDF viewers (only poppler render); Cyrillic/Polish text in the voucher visually (strings are embedded with DejaVu Sans, which covers them, but only the English voucher was rendered); screen-reader behaviour of the calendar; real phones; Lighthouse for the new `/account/` page and the heavier stay page; booking e2e is slow (~45 s, mostly PDF generation in software rendering).
+
+**By design (demo):** no payment is processed and no email is sent; the UI says "demo: in production this would charge the card and send a confirmation email." Busy dates are fictional and identical for every visitor.

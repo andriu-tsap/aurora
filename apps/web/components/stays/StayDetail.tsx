@@ -18,6 +18,7 @@ import {
 import { useLocale, useT, type MessageKey } from "../i18n";
 import { PageShell } from "../PageShell";
 import { Photo } from "../Photo";
+import { BookingPanel } from "../booking/BookingPanel";
 import { heroRegions } from "../regions";
 
 const CabinScene = dynamic(() => import("../cabin/CabinScene"), { ssr: false });
@@ -335,9 +336,9 @@ function Detail({ slug }: { slug: string }) {
               </div>
             ))}
           </dl>
-          <p className="muted">{t("bookingSoon")}</p>
         </aside>
       </div>
+      <BookingPanel stay={stay} />
       <Cabin3D stay={stay} />
       <Location stay={stay} />
     </main>

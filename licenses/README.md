@@ -18,3 +18,5 @@
 - MapLibre GL JS (BSD-3-Clause).
 - React, Next.js, Three.js, React Three Fiber, drei, postprocessing (Zlib), @react-three/postprocessing (MIT), n8ao (ISC), Motion, Tailwind CSS and development dependencies retain their upstream licenses in their packages.
 - GSAP: Standard License, https://gsap.com/community/standard-license/ . Free commercial use under its terms; not represented as an OSI open-source license.
+- DejaVu Sans (regular, bold): Bitstream Vera / DejaVu free license, see `DejaVu-LICENSE.txt`. Copied to `apps/web/public/fonts/voucher/` by `scripts/copy-fonts.mjs` and embedded only in the downloadable PDF voucher (Latin, Latin Extended, Cyrillic).
+- pdf-lib and @pdf-lib/fontkit (MIT), qrcode (MIT): PDF voucher and vector QR code, loaded lazily on download.

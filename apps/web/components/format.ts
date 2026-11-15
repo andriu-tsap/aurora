@@ -55,3 +55,21 @@ export const typeLabel: Record<Stay["type"], MessageKey> = {
 export function amenityLabel(amenity: Stay["amenities"][number]) {
   return `amen_${amenity}` as MessageKey;
 }
+
+/** Message key for "night/nights" in the locale's plural category. */
+export function nightsKey(count: number, locale: Locale): MessageKey {
+  const category = new Intl.PluralRules(intlLocale[locale]).select(count);
+  if (category === "one") return "nightOne";
+  if (category === "few") return "nightFew";
+  return "nightMany";
+}
+
+/** "2026-12-01" → localized date, always in UTC so it never shifts a day. */
+export function formatDay(iso: string, locale: Locale, long = false) {
+  return new Intl.DateTimeFormat(intlLocale[locale], {
+    dateStyle: long ? "long" : "medium",
+    timeZone: "UTC",
+  }).format(new Date(`${iso}T00:00:00Z`));
+}
+
+export { intlLocale };

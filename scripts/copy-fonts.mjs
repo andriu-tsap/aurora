@@ -51,3 +51,12 @@ export const fontFaces = ${JSON.stringify(rules, null, 2)} as const;
 `,
 );
 console.log(rules.map((r) => r.file).join("\n"));
+
+// Voucher PDF fonts (DejaVu Sans covers Latin, Latin Extended and Cyrillic).
+// Fetched only when a guest downloads a voucher.
+const dejavu = path.dirname(require.resolve("dejavu-fonts-ttf/package.json"));
+const voucherOut = "apps/web/public/fonts/voucher";
+await mkdir(voucherOut, { recursive: true });
+for (const f of ["DejaVuSans.ttf", "DejaVuSans-Bold.ttf"]) {
+  await copyFile(path.join(dejavu, "ttf", f), path.join(voucherOut, f));
+}
