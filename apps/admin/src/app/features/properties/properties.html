@@ -1,0 +1,53 @@
+<h1>{{ i18n.t().propertiesTitle }}</h1>
+<p class="lead">{{ i18n.t().propertiesLead }}</p>
+@if (!store.persisted()) {
+  <p class="warn" role="alert">{{ i18n.t().saveFailed }}</p>
+}
+<ul class="list" data-testid="property-list">
+  @for (row of store.rows(); track row.slug) {
+    <li class="row" [attr.data-slug]="row.slug">
+      <img class="thumb" [src]="thumb(row)" alt="" width="120" height="75" loading="lazy" />
+      <div class="info">
+        <h2>{{ row.name }}</h2>
+        <p class="meta">
+          {{ i18n.region(row.region) }} · {{ i18n.t().colGuests }}: {{ row.maxGuests }}
+          @if (store.isEdited(row.slug)) {
+            <span class="tag">{{ i18n.t().edited }}</span>
+          }
+          @if (row.custom) {
+            <span class="tag">{{ i18n.t().custom }}</span>
+          }
+        </p>
+      </div>
+      <form class="price" (submit)="$event.preventDefault(); save(row, price)">
+        <label [for]="'price-' + row.slug">{{ i18n.t().priceLabel }}</label>
+        <div class="field">
+          <span aria-hidden="true">€</span>
+          <input
+            #price
+            [id]="'price-' + row.slug"
+            type="number"
+            inputmode="decimal"
+            min="1"
+            step="1"
+            [value]="row.nightlyCents / 100"
+            [attr.aria-invalid]="status()[row.slug] === 'invalid' ? 'true' : null"
+          />
+          <button type="submit" class="btn">{{ i18n.t().savePrice }}</button>
+          @if (store.isEdited(row.slug)) {
+            <button type="button" class="btn" (click)="reset(row)" [attr.title]="i18n.t().resetStay">
+              {{ i18n.t().reset }}
+            </button>
+          }
+        </div>
+        <p class="msg" role="status">
+          @if (status()[row.slug] === 'saved') {
+            {{ i18n.t().priceSaved }}
+          } @else if (status()[row.slug] === 'invalid') {
+            {{ i18n.t().priceInvalid }}
+          }
+        </p>
+      </form>
+    </li>
+  }
+</ul>

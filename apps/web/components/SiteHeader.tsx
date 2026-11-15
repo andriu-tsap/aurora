@@ -26,6 +26,7 @@ export function SiteHeader({
         <a href={`${base}/stays/`}>{t("navStays")}</a>
         <a href={`${base}/cabin/`}>{t("navCabin")}</a>
         <a href={`${base}/account/`}>{t("navAccount")}</a>
+        <a href={`${base}/admin/`}>{t("navOwner")}</a>
       </nav>
       <div className="header-right">
         <span className="demo">

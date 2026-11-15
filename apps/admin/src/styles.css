@@ -1,0 +1,77 @@
+@import "@aurora/ui/tokens.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/700.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  color-scheme: dark;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1rem/1.5 Inter, system-ui, sans-serif;
+  min-height: 100vh;
+}
+h1,
+h2 {
+  font-family: "Space Grotesk", Inter, sans-serif;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+}
+a {
+  color: var(--mint);
+}
+:focus-visible {
+  outline: 2px solid var(--mint);
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font: 600 0.95rem Inter, sans-serif;
+  cursor: pointer;
+  min-height: 44px;
+  color: var(--text);
+  background: transparent;
+  border-color: rgb(255 255 255 / 0.22);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn:hover {
+  border-color: var(--mint);
+}
+.btn-primary {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #1a0b06;
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+  border-color: var(--coral);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

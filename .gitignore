@@ -9,3 +9,6 @@ out
 qa/
 test-results/
 *.tsbuildinfo
+dist
+.angular
+out-tsc

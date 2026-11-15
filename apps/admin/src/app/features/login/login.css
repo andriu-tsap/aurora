@@ -1,0 +1,17 @@
+.card {
+  max-width: 34rem;
+  margin: 3rem auto;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: var(--surface);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 20px;
+}
+.lead {
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+}
+.small {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}

@@ -243,4 +243,5 @@ export const uk: Record<MessageKey, string> = {
   acVoucher: "PDF-ваучер",
   acGuest: "Гість",
   navAccount: "Бронювання",
+  navOwner: "Панель власника",
 };

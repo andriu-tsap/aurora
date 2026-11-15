@@ -1,0 +1,33 @@
+<a class="skip" href="#main">{{ i18n.t().skip }}</a>
+<header class="bar">
+  <a class="brand" [href]="siteUrl" aria-label="AURORA">
+    <span class="mark" aria-hidden="true">✳</span> AURORA<span class="dot">.</span>
+    <span class="panel">{{ i18n.t().panel }}</span>
+  </a>
+  @if (session.signedIn()) {
+    <nav class="nav" [attr.aria-label]="i18n.t().nav">
+      <a routerLink="/properties" routerLinkActive="on" ariaCurrentWhenActive="page">{{
+        i18n.t().navProperties
+      }}</a>
+    </nav>
+  }
+  <div class="right">
+    <span class="badge" data-testid="demo-badge"><i></i>{{ i18n.t().demoBadge }}</span>
+    <label class="lang">
+      <span class="sr-only">{{ i18n.t().language }}</span>
+      <select [value]="i18n.locale()" (change)="setLocale($event)" [attr.aria-label]="i18n.t().language">
+        <option value="en">EN</option>
+        <option value="pl">PL</option>
+        <option value="uk">UA</option>
+      </select>
+    </label>
+    <a class="btn small" [href]="siteUrl">{{ i18n.t().backToSite }}</a>
+    @if (session.signedIn()) {
+      <button type="button" class="btn small" (click)="signOut()">{{ i18n.t().logout }}</button>
+    }
+  </div>
+</header>
+<p class="note">{{ i18n.t().demoNote }}</p>
+<main id="main" tabindex="-1">
+  <router-outlet />
+</main>

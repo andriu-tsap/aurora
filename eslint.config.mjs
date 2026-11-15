@@ -7,6 +7,8 @@ export default tseslint.config(
       "**/.next/**",
       "**/out/**",
       "**/next-env.d.ts",
+      "**/dist/**",
+      "**/.angular/**",
       "qa/**",
     ],
   },

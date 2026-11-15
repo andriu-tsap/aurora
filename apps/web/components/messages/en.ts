@@ -239,6 +239,7 @@ export const en = {
   acVoucher: "PDF voucher",
   acGuest: "Guest",
   navAccount: "Bookings",
+  navOwner: "Owner panel",
 };
 
 export type MessageKey = keyof typeof en;
