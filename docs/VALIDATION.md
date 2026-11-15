@@ -21,12 +21,12 @@ Date: 2026-11-15. Stage 1 is deployed and ready for the user's visual acceptance
 
 Measured by Lighthouse 13.6.0 in GitHub Actions against the final static export, served at `/aurora/` with HTTP compression. Default simulated mobile throttling, fresh profile, WebGL not activated. This is a lab test of the production build, not a physical-phone measurement or a claim about every public-network visit.
 
-| Category | Score |
-|---|---:|
-| Performance | 91 |
-| Accessibility | 100 |
-| Best practices | 100 |
-| SEO | 100 |
+| Category       | Score |
+| -------------- | ----: |
+| Performance    |    91 |
+| Accessibility  |   100 |
+| Best practices |   100 |
+| SEO            |   100 |
 
 FCP 0.8 s; LCP 2.7 s; total blocking time 250 ms; CLS 0. Raw JSON and HTML are in `docs/lighthouse/`. Earlier iterations scored 78 and 71 for performance; those results prompted real changes: lazy animation runtimes, a rasterized mobile poster and deferred scroll effects. The final Lighthouse workflow remains separate from Pages and cannot block deployment.
 
@@ -49,3 +49,21 @@ After all stages are implemented and accepted, deliver one ZIP with complete sou
 ## Accepted stage-one follow-up — 2026-11-15
 
 User accepted the overall stage-one design, then requested five layout adjustments. Application revision `6643b44` implements them. [QA run](https://github.com/andriu-tsap/aurora/actions/runs/43701133745) passed all five browser tests, including new assertions for caption/button separation at 390 px and a stacked search button at 360 px. Updated 1440/390/360 screenshots were inspected. Pages deployment succeeded. The latest mobile Lighthouse run scored **86 / 100 / 100 / 100**; the earlier 91 is not represented as the current score. Further startup optimization is planned during stage 2.
+
+## Stage 2 — interim (cabin review checkpoint), 2026-11-15
+
+Order agreed with the owner: Lighthouse → demo data → 3D cabin → owner review of 4 cabin screenshots → catalogue, map and property page. Catalogue, map and property page are **not started**.
+
+### Verified locally (this session)
+
+- `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` (8 Vitest data tests) and the static export with `/aurora` pass.
+- Playwright: **11 tests pass** (5 existing hero tests + 6 new cabin tests) in headless Chromium with software WebGL. A locally installed Chromium was used via `PW_CHROMIUM_PATH` because the session network blocked Playwright's browser download.
+- Mobile Lighthouse (home page, local static server, Lighthouse 13.6, default simulated throttling): performance **94 / 90 / 97** in three consecutive runs before the 4th region was added; accessibility, best practices and SEO 100. Changes: responsive AVIF/WebP poster, unicode-range-aware font imports, next-intl replaced by a typed lookup, CSS blur filters replaced by gradients. CI numbers will be read from the Visual QA workflow; they are not claimed here.
+- Every globe marker (4) maps to a non-empty set of stays (unit test). The Julian Alps region was added to the globe, poster and hero.
+- Cabin scene: 78,746 triangles (scene graph count, see `docs/visual-reviews/stage-2/README.md`), four real screenshots inspected against the 3D checklist.
+
+### Not verified
+
+- Lighthouse after adding the 4th region and the cabin page; Lighthouse for `/cabin/`.
+- Real phones/GPUs, Safari/Firefox, frame rate while orbiting.
+- CI run of the new cabin tests (expected to be slow on software WebGL; they run only in the non-blocking Visual QA workflow).

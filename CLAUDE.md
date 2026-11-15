@@ -13,8 +13,10 @@ AURORA — fictional booking platform for unique stays (glamping, mountain cabin
 ## Current state
 
 - Stage 0 ✅, Stage 1 ✅ (accepted; 5 follow-up fixes in `6643b44`).
-- **Stage 2 — in progress (awaiting owner "OK" on plan).** Scope: catalogue with filters, MapLibre map (OpenFreeMap) synced with list, property page with gallery + **code-built 3D A-frame cabin**, 8–12 fictional properties in 4 regions, mobile Lighthouse Performance back to ≥ 90, 4 real cabin screenshots for owner review.
-- Known debt: mobile Lighthouse Performance 86 in CI (87 locally, 2026-11-15): LCP 3.2 s (162 KB WebP poster), TBT 300 ms (whole page is a client component with next-intl + framer-motion hydration).
+- **Stage 2 — in progress.** Owner-approved order: (1) Lighthouse ✅ (local 90–97), (2) demo data ✅ (`packages/types`, `packages/demo-data`, 10 A-frame stays, 4 regions = 4 globe markers incl. Julian Alps), (3) 3D cabin ✅ at `/cabin/` (`apps/web/components/cabin/`), (4) **waiting for owner review of 4 cabin screenshots** in `docs/visual-reviews/stage-2/`. Only after the owner's OK: catalogue `/stays/` with filters, MapLibre map (mobile: List/Map toggle, not two columns), property page with gallery + embedded cabin.
+- Owner decisions: property photos = renders of our own cabin (no stock photos); separate `/en/ /pl/ /ua/` SEO routes postponed to stage 8.
+- Testing notes: cabin e2e uses software WebGL (~30–50 s per frame). `?autoload=1&time=night&wood=charred&metal=bronze&curtains=closed&quality=low` URL params drive the studio. `window.__auroraCabin.triangles` exposes the measured count.
+- 3D lessons learned: drei `Environment` presets download HDRs from a CDN → use `Lightformer`s. IBL ignores walls → reduce `envMapIntensity` on interior-only materials. Sub-pixel deck gaps alias → MSAA ×4 on desktop. Build wood at real size (no scaling) so grain/bevels are not stretched.
 
 ## Stages
 
