@@ -10,7 +10,11 @@ export default defineConfig({
   ],
   use: {
     baseURL: "http://127.0.0.1:4173/aurora/",
-    launchOptions: { args: ["--use-angle=swiftshader", "--enable-webgl"] },
+    launchOptions: {
+      args: ["--use-angle=swiftshader", "--enable-webgl"],
+      // Optional local override when the bundled browser cannot be downloaded.
+      executablePath: process.env.PW_CHROMIUM_PATH || undefined,
+    },
     trace: "retain-on-failure",
   },
   webServer: {
