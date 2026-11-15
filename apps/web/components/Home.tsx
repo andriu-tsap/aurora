@@ -8,12 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { NextIntlClientProvider, useTranslations } from "next-intl";
+import { I18nProvider, useT, type MessageKey } from "./i18n";
 
-import { messages, type Locale } from "./messages";
+import { type Locale } from "./messages";
 const Globe = dynamic(() => import("./Globe"), { ssr: false });
 function TitleFallback() {
-  const t = useTranslations();
+  const t = useT();
   return (
     <>
       <span>{t("title")}</span>
@@ -27,6 +27,11 @@ const AnimatedTitle = dynamic(() => import("./AnimatedTitle"), {
   loading: TitleFallback,
 });
 const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const posterSizes = "(max-width: 767px) 100vw, 57vw";
+const posterSet = (format: "avif" | "webp") =>
+  [480, 720, 960]
+    .map((w) => `${base}/globe-poster-${w}.${format} ${w}w`)
+    .join(", ");
 const names = ["carpathians", "tatras", "adriatic"] as const;
 const countries = ["ukraine", "poland", "croatia"] as const;
 const descriptions = ["carpathiansDesc", "tatrasDesc", "adriaticDesc"] as const;
@@ -70,13 +75,9 @@ export default function Home() {
     document.documentElement.lang = locale;
   }, [locale]);
   return (
-    <NextIntlClientProvider
-      locale={locale}
-      messages={messages[locale]}
-      timeZone="Europe/Warsaw"
-    >
+    <I18nProvider locale={locale}>
       <Landing locale={locale} setLocale={changeLocale} />
-    </NextIntlClientProvider>
+    </I18nProvider>
   );
 }
 function Landing({
@@ -86,7 +87,7 @@ function Landing({
   locale: Locale;
   setLocale: (locale: Locale) => void;
 }) {
-  const t = useTranslations();
+  const t = useT();
   const [active, setActive] = useState(0);
   const [showGlobe, setShowGlobe] = useState(false);
   const [ready, setReady] = useState(false);
@@ -290,14 +291,24 @@ function Landing({
             <div className="visual-glow" />
             <div className="orbit orbit-one" />
             <div className="orbit orbit-two" />
-            <img
-              className={"globe-poster " + (ready ? "poster-hidden" : "")}
-              src={`${base}/globe-poster.webp`}
-              width="640"
-              height="640"
-              alt=""
-              fetchPriority="high"
-            />
+            <picture>
+              <source
+                type="image/avif"
+                srcSet={posterSet("avif")}
+                sizes={posterSizes}
+              />
+              <img
+                className={"globe-poster " + (ready ? "poster-hidden" : "")}
+                src={`${base}/globe-poster-720.webp`}
+                srcSet={posterSet("webp")}
+                sizes={posterSizes}
+                width="640"
+                height="640"
+                alt=""
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
             {showGlobe && (
               <SceneBoundary
                 fallback={
@@ -363,9 +374,9 @@ function Landing({
           <div className="story-grid" id="how">
             {[1, 2, 3].map((i) => (
               <div key={i}>
-                <span>{t(`step${i}`)}</span>
-                <h3>{t(`heading${i}`)}</h3>
-                <p>{t(`description${i}`)}</p>
+                <span>{t(`step${i}` as MessageKey)}</span>
+                <h3>{t(`heading${i}` as MessageKey)}</h3>
+                <p>{t(`description${i}` as MessageKey)}</p>
               </div>
             ))}
           </div>

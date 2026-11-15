@@ -301,8 +301,14 @@ h1 em {
   width: 75%;
   height: 75%;
   border-radius: 50%;
-  background: radial-gradient(circle, #207b7960, transparent 65%);
-  filter: blur(45px);
+  /* Soft falloff via gradient stops instead of a costly filter blur. */
+  background: radial-gradient(
+    circle,
+    #207b7955 0%,
+    #207b7926 38%,
+    #207b790a 58%,
+    transparent 72%
+  );
 }
 .fallback-globe {
   width: min(71%, 570px);
@@ -600,6 +606,9 @@ footer .brand {
   right: -1.5%;
   top: 2%;
 }
+.visual picture {
+  display: contents;
+}
 .globe-poster {
   width: 100%;
   height: 100%;
@@ -613,8 +622,12 @@ footer .brand {
   opacity: 0;
 }
 .visual-glow {
-  background: radial-gradient(ellipse, #20b69c22, transparent 65%);
-  filter: blur(40px);
+  background: radial-gradient(
+    ellipse,
+    #20b69c20 0%,
+    #20b69c0e 40%,
+    transparent 72%
+  );
 }
 .orbit-one {
   transform: rotate(-24deg);
@@ -951,15 +964,13 @@ footer a {
   right: -10%;
   width: 65%;
   height: 160px;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    #2ef2c721 45%,
-    #8b5cff21 75%,
-    transparent
+  background: radial-gradient(
+    ellipse at 55% 50%,
+    #2ef2c71c 0%,
+    #8b5cff14 40%,
+    transparent 70%
   );
   box-shadow: none;
-  filter: blur(60px);
   transform: rotate(-18deg);
   border-radius: 50%;
 }

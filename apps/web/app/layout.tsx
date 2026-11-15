@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import "@fontsource/inter/latin-400.css";
-import "@fontsource/inter/latin-ext-400.css";
-import "@fontsource/inter/cyrillic-400.css";
-import "@fontsource/inter/latin-600.css";
-import "@fontsource/inter/latin-ext-600.css";
-import "@fontsource/inter/cyrillic-600.css";
-import "@fontsource/space-grotesk/latin-500.css";
-import "@fontsource/space-grotesk/latin-ext-500.css";
+// Weight files carry unicode-range, so browsers fetch only the subsets a page renders.
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/space-grotesk/500.css";
 import "@aurora/ui/tokens.css";
 import "./style.css";
 export const metadata: Metadata = {
