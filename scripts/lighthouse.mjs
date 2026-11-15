@@ -23,6 +23,23 @@ try {
   );
   await writeFile("qa/lighthouse/scores.json", JSON.stringify(scores, null, 2));
   console.log(scores);
+  // Report-only scores for the stage-2 pages (never a deploy gate).
+  const pages = {};
+  for (const path of ["stays/", "stays/halny-ridge/", "cabin/"]) {
+    const page = await lighthouse(`http://127.0.0.1:4173/aurora/${path}`, {
+      port: chrome.port,
+      output: "json",
+      onlyCategories: ["performance", "accessibility", "best-practices", "seo"],
+    });
+    pages[path] = Object.fromEntries(
+      Object.entries(page.lhr.categories).map(([key, value]) => [
+        key,
+        Math.round(value.score * 100),
+      ]),
+    );
+  }
+  await writeFile("qa/lighthouse/pages.json", JSON.stringify(pages, null, 2));
+  console.log(pages);
   for (const [id, audit] of Object.entries(result.lhr.audits)) {
     if (audit.score !== null && audit.score < 0.9)
       console.log(

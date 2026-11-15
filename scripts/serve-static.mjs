@@ -2,7 +2,8 @@ import http from "node:http";
 import { gzipSync } from "node:zlib";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
-const root = path.resolve("apps/web/out");
+const root = path.resolve(process.env.STATIC_ROOT || "apps/web/out");
+const port = Number(process.env.PORT || 4173);
 const mime = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -12,6 +13,8 @@ const mime = {
   ".json": "application/json",
   ".xml": "application/xml",
   ".png": "image/png",
+  ".webp": "image/webp",
+  ".avif": "image/avif",
 };
 http
   .createServer(async (req, res) => {
@@ -45,4 +48,4 @@ http
       res.writeHead(404).end("Not found");
     }
   })
-  .listen(4173, "127.0.0.1");
+  .listen(port, "127.0.0.1");

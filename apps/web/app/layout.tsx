@@ -1,10 +1,20 @@
 import type { Metadata } from "next";
-// Weight files carry unicode-range, so browsers fetch only the subsets a page renders.
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/space-grotesk/500.css";
 import "@aurora/ui/tokens.css";
 import "./style.css";
+
+import { fontFaces } from "./fonts.generated";
+
+const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+// Self-hosted Fontsource files with unicode-range: browsers fetch only the
+// subsets a page renders. The Latin files are preloaded so text does not wait
+// for CSS and scripts to be processed before the fonts are discovered.
+const fontCss = fontFaces
+  .map(
+    (f) =>
+      `@font-face{font-family:"${f.family}";font-style:normal;font-display:swap;font-weight:${f.weight};src:url(${base}/fonts/${f.file}) format("woff2");unicode-range:${f.range}}`,
+  )
+  .join("");
 export const metadata: Metadata = {
   metadataBase: new URL("https://andriu-tsap.github.io/aurora/"),
   icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icon.svg` },
@@ -32,6 +42,21 @@ export default function Layout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        {fontFaces
+          .filter((f) => f.preload)
+          .map((f) => (
+            <link
+              key={f.file}
+              rel="preload"
+              href={`${base}/fonts/${f.file}`}
+              as="font"
+              type="font/woff2"
+              crossOrigin=""
+            />
+          ))}
+        <style dangerouslySetInnerHTML={{ __html: fontCss }} />
+      </head>
       <body>{children}</body>
     </html>
   );
