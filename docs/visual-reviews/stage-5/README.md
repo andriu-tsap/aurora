@@ -10,23 +10,17 @@ Real browser captures of the static export served under `/aurora/admin/`; no moc
 | `admin-properties-1440.png`, `admin-properties-390.png` | property list | 1440, 390 | EN | step 5.1/5.2, kept |
 | `admin-form-1440.png`, `admin-form-390.png` | add property form | 1440, 390 | EN | step 5.2, kept |
 | `admin-occupancy-1440.png`, `admin-occupancy-390.png` | occupancy and revenue | 1440, 390 (the file is 360 px wide) | EN | step 5.3, kept |
-| `login-1440-en.png`, `login-1440-uk.png`, `login-390-en.png`, `login-390-uk.png` | login | 1440, 390 | EN, UA | `scripts/capture-stage5.mjs`, **not yet generated** |
-| `list-<1440\|390>-<en\|uk>.png` | property list | 1440, 390 | EN, UA | same, **not yet generated** |
-| `form-<1440\|390>-<en\|uk>.png` | new property form | 1440, 390 | EN, UA | same, **not yet generated** |
-| `occupancy-<1440\|390>-<en\|uk>.png` | occupancy (property "Halny Ridge", November 2026) | 1440, 390 | EN, UA | same, **not yet generated** |
+| `login-1440-en.png`, `login-1440-uk.png`, `login-390-en.png`, `login-390-uk.png` | login | 1440, 390 | EN, UA | `scripts/capture-stage5.mjs` |
+| `list-<1440\|390>-<en\|uk>.png` | property list | 1440, 390 | EN, UA | same |
+| `form-<1440\|390>-<en\|uk>.png` | new property form | 1440, 390 | EN, UA | same |
+| `occupancy-<1440\|390>-<en\|uk>.png` | occupancy (property "Halny Ridge", November 2026) | 1440, 390 | EN, UA | same |
 
 The seven existing files come from earlier steps and are untouched. The 16 new files are produced by `scripts/capture-stage5.mjs` (`node scripts/serve-static.mjs &`, then `PW_CHROMIUM_PATH=/path/to/chrome node scripts/capture-stage5.mjs`). The script never deletes anything. It freezes `Date` at 2026-11-16 and injects **one** fictional guest booking (`AUR-SHOT01`, 10–14 Nov 2026, Halny Ridge) into `localStorage` so that the "guest" state of the calendar is visible; this is a test fixture, not a real reservation.
 
-## Self-assessment
+## Self-assessment (inspected: `occupancy-390-uk.png`; the others were produced by the same script and not all opened one by one)
 
-Status: **not done for the new files**. The session that wrote the script had no browser run and no build, so none of the 16 new images exists and none was inspected. Nothing below is claimed about them.
-
-To fill in after the capture, against the stage checklist:
-
-- [ ] no horizontal scroll at 390 px on list, form and occupancy;
-- [ ] "Demo data" badge visible in every image;
-- [ ] UA text fits without clipping (buttons, calendar summary, table headers);
-- [ ] calendar shows free, demo-busy and guest states with pattern or shape plus text, not colour alone;
-- [ ] focus outlines visible where a screenshot shows a focused element.
-
-The seven existing images were reviewed by the owner's assistant in step 5.1–5.3 and were not re-inspected in this session.
+- [x] no horizontal page scroll at 390 px on list, form and occupancy (also asserted by an e2e test);
+- [x] "Demo data" badge visible (seen in the inspected image; asserted in e2e on login and after sign-in);
+- [~] UA text fits in the inspected image; **known issue**: the revenue chart is wider than the screen and scrolls inside its block, and its left Y-axis labels are clipped;
+- [x] calendar shows free, demo-busy (hatching + ×) and guest (solid + ◆) states, with a text legend;
+- [ ] focus outlines in screenshots: not checked.

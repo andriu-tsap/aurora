@@ -102,34 +102,32 @@ Status: implemented, waiting for the owner's "OK". Fresh screenshots are in `doc
 
 ## Stage 5 — owner panel (Angular, demo mode), step 5.4 (2026-11-16)
 
-Status: 5.1–5.3 implemented and accepted; 5.4 (e2e, screenshot script, docs) **written, not run**. Waiting for a full run in a real browser and for the owner's "OK". Stage 8 has not started.
+Status: 5.1–5.3 accepted; 5.4 (e2e, screenshots, docs) implemented and run in a real browser at `fd90cb1` + 3 commits. Waiting for the owner's "OK". Stage 8 has not started.
 
-### Verified
+### Verified (actually run, 2026-11-16, local Chrome, static export served at `:4173/aurora/`)
 
-- As reported by the owner's assistant (real browser, not re-run in this session): steps 5.1, 5.2 and 5.3 were checked in a browser and pushed. The `/occupancy` page was wider than the screen at 390 / 360 px; this was fixed in `fd90cb1` (`minmax(0,1fr)` and `min-width:0`) and is kept as is.
-- In this session (sandbox without network, without `node_modules`):
-  - the repository was unpacked from `aurora-fd90cb1.zip` and committed as a local baseline; nothing else was changed in application code;
-  - `tests/admin.spec.ts` was type-checked against the Playwright 1.63 typings that were available in the sandbox; the only errors were missing `@types/node` declarations (`node:fs/promises`, `Buffer`), not API errors. This is not the project's own `tsc`/`eslint` run;
-  - the PNG helper `tests/support/png.ts` was run and the file it produces decodes as a valid 640 × 400 RGB image (Pillow);
-  - `scripts/capture-stage5.mjs` and `scripts/lighthouse.mjs` pass `node --check` (syntax only);
-  - the selectors, texts and storage keys used in the spec were read from the Angular templates, message files and services of the repository at `fd90cb1`.
+- `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` (67 tests) and `NEXT_PUBLIC_BASE_PATH=/aurora pnpm build`: pass.
+- Playwright: the 8 new admin tests pass; the full suite passes **35/35** (27 existing + 8 new, ~4 min). Two fixes were needed after the first run: an ambiguous `getByRole("group")` in the delete test and a lint error (`localStorage` global) in `scripts/capture-stage5.mjs`.
+- `scripts/capture-stage5.mjs` produced 16 new screenshots (login, list, form, occupancy; 1440 and 390; EN and UA) in `docs/visual-reviews/stage-5/`.
+- Lighthouse (local, report only) for `/admin/`: performance 99, accessibility 100, best practices 100, SEO 60.
+- By hand in a real browser (steps 5.1–5.3): demo login, price edit + reload + reset, create property with compressed photos + delete, guest booking shown in the calendar, CSV and .xlsx download (the xlsx chunk loads only on click), EN/PL/UA, no console errors. The exported files were opened with Python parsers (csv, openpyxl).
 
 ### Not verified
 
-- `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` and `NEXT_PUBLIC_BASE_PATH=/aurora pnpm build` were **not run** in this session (dependencies could not be installed).
-- The 8 new Playwright tests in `tests/admin.spec.ts` were **not run**. Passing is not claimed; they may need small selector or timing fixes. The existing 27 tests were not run either, so "27 stay green" is not confirmed here.
-- Not run: `scripts/capture-stage5.mjs` (the new screenshots in `docs/visual-reviews/stage-5/` do not exist yet) and the Lighthouse run for `/admin/` (no score is claimed).
-- Not verified anywhere: screen readers, real phones, Safari/Firefox, the deployed site for this commit.
+- Opening the .xlsx / CSV in Excel itself (Polish regional settings), screen readers, real phones, Safari/Firefox, the deployed site for this commit (the sandbox cannot reach github.io).
+- Drag & drop with a mouse (only file-picker input was tested); the message for a non-image file was not read.
+- Known visual issue (not fixed): at 390 px (UA) the revenue chart is wider than the screen and scrolls inside its own block; the left Y-axis labels ("тис. EUR") are clipped. The page itself does not scroll horizontally.
+- Admin SEO 60 is expected for a demo panel (no meta description / not meant to be indexed).
 
 ### Scope of the new admin tests (`tests/admin.spec.ts`)
 
 1. Demo login; the "Demo data" badge is visible on the login page and after sign-in.
 2. Price change → reload → persisted → "Reset" returns the original price.
 3. Create a property with a photo (`setInputFiles` on `photo-input`) → reload → persisted → delete with confirmation → still gone after reload.
-4. Invalid form: errors, `role="alert"`, `aria-invalid`, focus on the first invalid field (name, then max guests).
-5. Occupancy calendar: arrows and PageDown / PageUp change day and month; a `Booking` injected into `aurora-bookings` is counted as "guest" in the summary and in the cell states; another property is unaffected.
-6. CSV export: a download event with a file name containing `aurora-demo-revenue`; the file contains "Demo data (fictional)".
+4. Invalid form: errors, `role="alert"`, `aria-invalid`, focus on the first invalid field.
+5. Occupancy calendar: arrows and PageDown / PageUp; a `Booking` injected into `aurora-bookings` is counted as "guest".
+6. CSV export: a download whose name contains `aurora-demo-revenue`; the file contains "Demo data (fictional)".
 7. EN / PL / UA switch in the header, persisted in `aurora-locale`.
 8. 390 px: no horizontal page scroll on `#/properties`, `#/properties/new`, `#/occupancy`.
 
-The tests need no WebGL and no network. `Date` is frozen to 2026-11-16 (timers keep running) so the calendar opens on November 2026.
+The tests need no WebGL and no network. `Date` is frozen to 2026-11-16 (timers keep running).

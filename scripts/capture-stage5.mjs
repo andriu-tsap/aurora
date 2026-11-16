@@ -41,6 +41,8 @@ for (const locale of ["en", "uk"]) {
     });
     await context.addInitScript(
       ([lang, booking]) => {
+        // Runs in the browser page, where localStorage exists.
+        /* global localStorage */
         localStorage.setItem("aurora-locale", lang);
         localStorage.setItem("aurora-bookings", JSON.stringify([booking]));
       },

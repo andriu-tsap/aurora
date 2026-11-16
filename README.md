@@ -48,7 +48,7 @@ Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geo
 | 2 | Catalogue, map, property pages, 3D cabin | ✅ |
 | 3 | Booking calendar and quote, demo payment, PDF voucher with QR, guest account, favourites | ✅ accepted |
 | 4 | Node.js server, PostgreSQL, real Stripe, WebSocket | ❌ not implemented in this version |
-| 5 | Angular 22 owner panel at `/admin/` (demo mode, no backend): 5.1–5.3 accepted, 5.4 (e2e, screenshots, docs) written, awaiting full run and the owner's "OK" | ⏳ |
+| 5 | Angular 22 owner panel at `/admin/` (demo mode, no backend): 5.1–5.3 accepted, 5.4 (e2e 35/35, screenshots, docs) done, awaiting the owner's "OK" | ⏳ |
 | 6 | Python service, Telegram bot | ❌ not implemented in this version |
 | 7 | WordPress plugin, `<aurora-availability>` widget, AI planner, PWA | ❌ not implemented in this version |
 | 8 | Final README, validation checklist, Lighthouse, ZIP | ⏳ planned (shortened) |
@@ -68,7 +68,7 @@ Final handoff after the accepted stages: one source ZIP excluding dependencies/s
 - `/aurora/admin/` (Angular 22, hash routes, no backend). Demo sign-in has no password; the "Demo data" badge is always visible. Everything is stored in this browser only (`localStorage`); the public site's data is never modified.
 - Properties: edit nightly prices, add / edit / delete your own properties with photos (compressed in the browser, never uploaded), restore a demo stay.
 - Occupancy (`#/occupancy`): month calendar per property (keyboard accessible) that also shows demo bookings made on the public site (`aurora-bookings`), and a fictional revenue chart with CSV and Excel export. The revenue model is stated in the UI; nothing was actually paid.
-- Tests: `tests/admin.spec.ts` (8 Playwright tests, no WebGL needed). Screenshots script: `scripts/capture-stage5.mjs` → [docs/visual-reviews/stage-5](docs/visual-reviews/stage-5/). Lighthouse (`scripts/lighthouse.mjs`) reports `/admin/` as a report-only page. What was and was not run is in [validation](docs/VALIDATION.md).
+- Tests: `tests/admin.spec.ts` (8 Playwright tests, no WebGL needed). Screenshots script: `scripts/capture-stage5.mjs` → [docs/visual-reviews/stage-5](docs/visual-reviews/stage-5/). Lighthouse (`scripts/lighthouse.mjs`) reports `/admin/` as a report-only page. Results (and what was not run) are in [validation](docs/VALIDATION.md).
 
 ## Stage-1 verification
 

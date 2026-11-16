@@ -97,7 +97,7 @@ test("create a property with a photo, it persists, then delete it with confirmat
   await expect(page.getByTestId("photo-list").locator("li")).toHaveCount(1);
 
   await page.getByRole("button", { name: "Delete property" }).click();
-  await expect(page.getByRole("group")).toContainText("Delete this property");
+  await expect(page.getByRole("group", { name: /Delete this property/ })).toBeVisible();
   await page.getByRole("button", { name: "Yes, delete" }).click();
   await expect(page).toHaveURL(/#\/properties$/);
   await expect(page.locator(".row", { hasText: "Test Cabin E2E" })).toHaveCount(
