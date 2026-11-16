@@ -21,6 +21,6 @@ The seven existing files come from earlier steps and are untouched. The 16 new f
 
 - [x] no horizontal page scroll at 390 px on list, form and occupancy (also asserted by an e2e test);
 - [x] "Demo data" badge visible (seen in the inspected image; asserted in e2e on login and after sign-in);
-- [~] UA text fits in the inspected image; **known issue**: the revenue chart is wider than the screen and scrolls inside its block, and its left Y-axis labels are clipped;
+- [~] UA text fits in the inspected image; the revenue chart scrolls inside its block on narrow screens (by design); its Y-axis labels were clipped at first and were fixed in stage 8, the screenshots were re-captured afterwards;
 - [x] calendar shows free, demo-busy (hatching + ×) and guest (solid + ◆) states, with a text legend;
 - [ ] focus outlines in screenshots: not checked.

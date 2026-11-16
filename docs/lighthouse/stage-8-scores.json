@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-16",
+  "tool": "Lighthouse mobile, local static export, report only",
+  "home": [
+    98,
+    100,
+    100,
+    100
+  ],
+  "pages": {
+    "stays/": [
+      95,
+      100,
+      100,
+      100
+    ],
+    "stays/halny-ridge/": [
+      99,
+      100,
+      100,
+      100
+    ],
+    "account/": [
+      99,
+      100,
+      100,
+      63
+    ],
+    "cabin/": [
+      97,
+      100,
+      100,
+      100
+    ],
+    "admin/": [
+      99,
+      100,
+      100,
+      60
+    ]
+  },
+  "order": "performance, accessibility, best-practices, seo",
+  "note": "account/ and admin/ SEO is low by design (noindex demo pages)."
+}

@@ -116,7 +116,7 @@ Status: 5.1–5.3 accepted; 5.4 (e2e, screenshots, docs) implemented and run in 
 
 - Opening the .xlsx / CSV in Excel itself (Polish regional settings), screen readers, real phones, Safari/Firefox, the deployed site for this commit (the sandbox cannot reach github.io).
 - Drag & drop with a mouse (only file-picker input was tested); the message for a non-image file was not read.
-- Known visual issue (not fixed): at 390 px (UA) the revenue chart is wider than the screen and scrolls inside its own block; the left Y-axis labels ("тис. EUR") are clipped. The page itself does not scroll horizontally.
+- At 390 px the revenue chart scrolls inside its own block (by design); its clipped Y-axis labels in UA were fixed in stage 8.
 - Admin SEO 60 is expected for a demo panel (no meta description / not meant to be indexed).
 
 ### Scope of the new admin tests (`tests/admin.spec.ts`)
@@ -131,3 +131,32 @@ Status: 5.1–5.3 accepted; 5.4 (e2e, screenshots, docs) implemented and run in 
 8. 390 px: no horizontal page scroll on `#/properties`, `#/properties/new`, `#/occupancy`.
 
 The tests need no WebGL and no network. `Date` is frozen to 2026-11-16 (timers keep running).
+
+
+## Final checklist — stage 8 (2026-11-16)
+
+Legend: ✅ verified by a real run in this project; ⚠️ partly verified or limited; ❌ not implemented in this version.
+
+| Feature | Status | Evidence / limit |
+| --- | --- | --- |
+| Landing with 3D globe, fallback poster, EN/PL/UA | ✅ | e2e hero tests; Lighthouse home 98/100/100/100 |
+| Catalogue, filters, map | ✅ | e2e catalogue tests; map style stubbed offline in tests, live tiles not checked in CI |
+| Property page, 3D cabin | ✅ | e2e; ~78.7k triangles measured; software WebGL only, real GPUs not tested |
+| Booking, quote, test-card payment (demo) | ✅ | e2e; only test cards, no real payment |
+| PDF voucher with QR, EN/PL/UA | ⚠️ | generated and inspected in the sandbox; not opened in every PDF reader |
+| Guest account, favourites | ✅ | e2e |
+| Owner panel: login, price edit, property CRUD, photos | ✅ | e2e (8 tests) and manual browser checks; drag & drop with a mouse not tested |
+| Occupancy calendar, revenue chart, CSV / Excel export | ⚠️ | e2e for calendar and CSV; xlsx opened with openpyxl only, not in Excel |
+| Accessibility | ⚠️ | Lighthouse a11y 100 on all pages, keyboard e2e for calendar and form; no screen-reader test |
+| Mobile 360 / 390 | ✅ | e2e checks for no horizontal page scroll |
+| Safari, Firefox, real phones | ❌ | not tested (Chromium only) |
+| Node API, PostgreSQL, real Stripe, WebSocket (stage 4) | ❌ | not implemented in this version |
+| Python service, Telegram bot (stage 6) | ❌ | not implemented in this version |
+| WordPress plugin, availability widget, AI planner, PWA (stage 7) | ❌ | not implemented in this version |
+
+### Final run (2026-11-16, local Chrome)
+
+- Unit 67/67, lint and typecheck clean, `NEXT_PUBLIC_BASE_PATH=/aurora` build passes, full Playwright suite 35/35.
+- Lighthouse mobile (performance / accessibility / best practices / SEO): home 98/100/100/100, `stays/` 95/100/100/100, `stays/halny-ridge/` 99/100/100/100, `cabin/` 97/100/100/100, `account/` 99/100/100/63, `admin/` 99/100/100/60. Low SEO on `account/` and `admin/` is by design (noindex demo pages). Scores are local and may differ on the live site.
+- Fixed in this step: the revenue chart's left margin was too small, so Y-axis labels were clipped in UA (checked: labels now start inside the chart in UA, PL and EN).
+- Not verified: the live GitHub Pages site for the final commit from this sandbox (github.io is not reachable here); check it by hand.

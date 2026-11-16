@@ -6,26 +6,47 @@ A fictional travel-platform concept by Andrii Tsap. **Concept / demo project —
 
 ![Night Atlas desktop](docs/visual-reviews/stage-1/hero-1440.png)
 
-Implemented so far: landing page with a 3D globe, filterable catalogue with map, property pages, a 3D cabin studio, and a fully demo booking flow (stages 0–3), in EN/PL/UA. There is no backend: all data is fictional and bookings live in the visitor's browser. An Angular owner panel (demo mode, no backend) lives at `/aurora/admin/`; see the status list below.
+A browsable demo of a stays-booking platform: landing with a 3D globe, a filterable catalogue with a map, property pages with a code-built 3D cabin, a full demo booking flow (test cards only, PDF voucher with QR, guest account, favourites) and an Angular owner panel at [`/admin/`](https://andriu-tsap.github.io/aurora/admin/). EN / PL / UA. There is no backend: all data is fictional and everything the visitor does stays in their own browser (`localStorage`).
 
-## Local development
+## Technologies
 
-Node 22+ and pnpm 11.25:
+| Area | Technology | Where |
+| --- | --- | --- |
+| Public site | Next.js 15 (static export), React 19, strict TypeScript, custom CSS (tokens "Night Atlas") | `apps/web` |
+| 3D | Three.js via React Three Fiber / drei: globe and a code-built A-frame cabin (~79k triangles, PBR, soft shadows) | `apps/web` |
+| Map | MapLibre GL with OpenFreeMap tiles | `apps/web` |
+| Booking (demo) | availability and price quote logic, test-card payment form, PDF voucher with vector QR (pdf-lib), confetti, email preview | `apps/web`, `packages/demo-data` |
+| Owner panel | Angular 22 (standalone components, signals, zoneless), hash routes, own i18n | `apps/admin` |
+| Panel features | property CRUD with photo compression, occupancy calendar (keyboard accessible), SVG revenue chart, CSV and Excel export | `apps/admin` |
+| Shared logic | pure TypeScript with unit tests (Vitest, 67 tests) | `packages/demo-data`, `packages/types` |
+| Languages | EN / PL / UA, typed message files | `apps/web`, `apps/admin` |
+| Tests | Playwright e2e (35 tests), Vitest, Lighthouse (report only) | `tests`, `scripts` |
+| Build and deploy | pnpm + Turborepo, GitHub Actions, GitHub Pages (one artifact serves the site and the panel) | `.github/workflows` |
 
-```sh
-pnpm install
-pnpm dev
+## Architecture
+
+```mermaid
+flowchart LR
+  V[Visitor] --> W[Next.js static site /aurora/]
+  O[Owner] --> A[Angular panel /aurora/admin/]
+  W --> D[(packages/demo-data<br/>fictional stays, availability, pricing)]
+  A --> D
+  W -- booking result --> LS[(localStorage<br/>aurora-bookings, aurora-favorites)]
+  A -- read only --> LS
+  A -- owner edits --> AS[(localStorage<br/>aurora-admin-state)]
+  W --> M[MapLibre + OpenFreeMap]
+  W --> T[Three.js globe and cabin]
 ```
 
-```sh
-NEXT_PUBLIC_BASE_PATH=/aurora pnpm build
-pnpm lint
-pnpm typecheck
-pnpm exec playwright install chromium
-pnpm test:e2e
-```
+The public site and the panel share the same demo data package. The panel never changes the public site; it only reads the demo bookings made in the same browser.
 
-`apps/web/out/` is the complete static Pages artifact. Paths include `/aurora`. The repository's Pages workflow uploads that folder. Browser tests serve it under the same prefix. The separate Visual QA workflow captures screenshots and a Lighthouse report; it never blocks the Pages deployment.
+## What is not in this version
+
+Stages 4, 6 and 7 were deliberately left out, so the project makes no claim about them: a Node.js API with PostgreSQL, real payments and WebSocket (4), a Python service and a Telegram bot (6), a WordPress plugin, an embeddable availability widget, an AI trip planner and a PWA (7). Everything shown as payment, email or notification is a demo and says so on screen.
+
+## Measured quality (local, report only)
+
+Lighthouse mobile, 2026-11-16: home 98 / 100 / 100 / 100, catalogue 95 / 100 / 100 / 100, property page 99 / 100 / 100 / 100, 3D cabin 97 / 100 / 100 / 100, owner panel 99 / 100 / 100 / 60 (SEO is low by design: a demo panel that should not be indexed). Order: performance / accessibility / best practices / SEO. Full results, and what was not verified, are in [docs/VALIDATION.md](docs/VALIDATION.md).
 
 ## Structure
 
@@ -48,10 +69,10 @@ Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geo
 | 2 | Catalogue, map, property pages, 3D cabin | ✅ |
 | 3 | Booking calendar and quote, demo payment, PDF voucher with QR, guest account, favourites | ✅ accepted |
 | 4 | Node.js server, PostgreSQL, real Stripe, WebSocket | ❌ not implemented in this version |
-| 5 | Angular 22 owner panel at `/admin/` (demo mode, no backend): 5.1–5.3 accepted, 5.4 (e2e 35/35, screenshots, docs) done, awaiting the owner's "OK" | ⏳ |
+| 5 | Angular 22 owner panel at `/admin/` (demo mode, no backend) | ✅ accepted |
 | 6 | Python service, Telegram bot | ❌ not implemented in this version |
 | 7 | WordPress plugin, `<aurora-availability>` widget, AI planner, PWA | ❌ not implemented in this version |
-| 8 | Final README, validation checklist, Lighthouse, ZIP | ⏳ planned (shortened) |
+| 8 | Final README, validation checklist, Lighthouse, ZIP | ✅ shortened version done |
 
 Final handoff after the accepted stages: one source ZIP excluding dependencies/secrets/caches, prebuilt public and admin exports, a per-feature honest status checklist, screenshots and measured Lighthouse reports.
 

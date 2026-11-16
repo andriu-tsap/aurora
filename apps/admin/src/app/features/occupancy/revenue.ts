@@ -22,7 +22,7 @@ import { OwnerStore } from "../../core/owner-store";
 /** Chart geometry in SVG user units; the picture scales with its container. */
 const W = 640;
 const H = 320;
-const M = { left: 64, right: 12, top: 28, bottom: 40 };
+const M = { left: 92, right: 12, top: 28, bottom: 40 };
 
 interface Bar {
   month: string;
