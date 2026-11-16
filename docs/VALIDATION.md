@@ -99,3 +99,37 @@ Status: implemented, waiting for the owner's "OK". Fresh screenshots are in `doc
 - No payment is processed and no email is sent. The UI says so ("demo: in production this email is sent to the guest"). Only test cards are accepted, no payment-provider branding, card data is never stored or sent; only the booking result goes to `localStorage` key `aurora-bookings`. Favourites live in `aurora-favorites`.
 - Busy dates are fictional and identical for every visitor.
 - Stages 4, 6 and 7 are not implemented in this version (owner decision); see the checklist in `CLAUDE.md`.
+
+## Stage 5 — owner panel (Angular, demo mode), step 5.4 (2026-11-16)
+
+Status: 5.1–5.3 implemented and accepted; 5.4 (e2e, screenshot script, docs) **written, not run**. Waiting for a full run in a real browser and for the owner's "OK". Stage 8 has not started.
+
+### Verified
+
+- As reported by the owner's assistant (real browser, not re-run in this session): steps 5.1, 5.2 and 5.3 were checked in a browser and pushed. The `/occupancy` page was wider than the screen at 390 / 360 px; this was fixed in `fd90cb1` (`minmax(0,1fr)` and `min-width:0`) and is kept as is.
+- In this session (sandbox without network, without `node_modules`):
+  - the repository was unpacked from `aurora-fd90cb1.zip` and committed as a local baseline; nothing else was changed in application code;
+  - `tests/admin.spec.ts` was type-checked against the Playwright 1.63 typings that were available in the sandbox; the only errors were missing `@types/node` declarations (`node:fs/promises`, `Buffer`), not API errors. This is not the project's own `tsc`/`eslint` run;
+  - the PNG helper `tests/support/png.ts` was run and the file it produces decodes as a valid 640 × 400 RGB image (Pillow);
+  - `scripts/capture-stage5.mjs` and `scripts/lighthouse.mjs` pass `node --check` (syntax only);
+  - the selectors, texts and storage keys used in the spec were read from the Angular templates, message files and services of the repository at `fd90cb1`.
+
+### Not verified
+
+- `pnpm lint`, `pnpm typecheck`, `pnpm test:unit` and `NEXT_PUBLIC_BASE_PATH=/aurora pnpm build` were **not run** in this session (dependencies could not be installed).
+- The 8 new Playwright tests in `tests/admin.spec.ts` were **not run**. Passing is not claimed; they may need small selector or timing fixes. The existing 27 tests were not run either, so "27 stay green" is not confirmed here.
+- Not run: `scripts/capture-stage5.mjs` (the new screenshots in `docs/visual-reviews/stage-5/` do not exist yet) and the Lighthouse run for `/admin/` (no score is claimed).
+- Not verified anywhere: screen readers, real phones, Safari/Firefox, the deployed site for this commit.
+
+### Scope of the new admin tests (`tests/admin.spec.ts`)
+
+1. Demo login; the "Demo data" badge is visible on the login page and after sign-in.
+2. Price change → reload → persisted → "Reset" returns the original price.
+3. Create a property with a photo (`setInputFiles` on `photo-input`) → reload → persisted → delete with confirmation → still gone after reload.
+4. Invalid form: errors, `role="alert"`, `aria-invalid`, focus on the first invalid field (name, then max guests).
+5. Occupancy calendar: arrows and PageDown / PageUp change day and month; a `Booking` injected into `aurora-bookings` is counted as "guest" in the summary and in the cell states; another property is unaffected.
+6. CSV export: a download event with a file name containing `aurora-demo-revenue`; the file contains "Demo data (fictional)".
+7. EN / PL / UA switch in the header, persisted in `aurora-locale`.
+8. 390 px: no horizontal page scroll on `#/properties`, `#/properties/new`, `#/occupancy`.
+
+The tests need no WebGL and no network. `Date` is frozen to 2026-11-16 (timers keep running) so the calendar opens on November 2026.

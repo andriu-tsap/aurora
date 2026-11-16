@@ -6,7 +6,7 @@ A fictional travel-platform concept by Andrii Tsap. **Concept / demo project —
 
 ![Night Atlas desktop](docs/visual-reviews/stage-1/hero-1440.png)
 
-Implemented so far: landing page with a 3D globe, filterable catalogue with map, property pages, a 3D cabin studio, and a fully demo booking flow (stages 0–3), in EN/PL/UA. There is no backend: all data is fictional and bookings live in the visitor's browser. The owner panel is planned next; see the status list below.
+Implemented so far: landing page with a 3D globe, filterable catalogue with map, property pages, a 3D cabin studio, and a fully demo booking flow (stages 0–3), in EN/PL/UA. There is no backend: all data is fictional and bookings live in the visitor's browser. An Angular owner panel (demo mode, no backend) lives at `/aurora/admin/`; see the status list below.
 
 ## Local development
 
@@ -46,9 +46,9 @@ Mobile, reduced-motion and data-saver visitors receive the pre-rendered WebP geo
 | 0 | Architecture, deploy | ✅ |
 | 1 | Hero with 3D globe | ✅ |
 | 2 | Catalogue, map, property pages, 3D cabin | ✅ |
-| 3 | Booking calendar and quote, demo payment, PDF voucher with QR, guest account, favourites | ✅ implemented, awaiting owner acceptance |
+| 3 | Booking calendar and quote, demo payment, PDF voucher with QR, guest account, favourites | ✅ accepted |
 | 4 | Node.js server, PostgreSQL, real Stripe, WebSocket | ❌ not implemented in this version |
-| 5 | Angular owner panel (demo mode, no backend) | ⏳ planned next |
+| 5 | Angular 22 owner panel at `/admin/` (demo mode, no backend): 5.1–5.3 accepted, 5.4 (e2e, screenshots, docs) written, awaiting full run and the owner's "OK" | ⏳ |
 | 6 | Python service, Telegram bot | ❌ not implemented in this version |
 | 7 | WordPress plugin, `<aurora-availability>` widget, AI planner, PWA | ❌ not implemented in this version |
 | 8 | Final README, validation checklist, Lighthouse, ZIP | ⏳ planned (shortened) |
@@ -62,6 +62,13 @@ Final handoff after the accepted stages: one source ZIP excluding dependencies/s
 - PDF voucher with a vector QR code in EN/PL/UA (DejaVu Sans embedded), generated in the browser on demand.
 - Guest account at `/account/` (list, cancel, voucher) and favourites (`aurora-favorites`). The confirmation shows confetti and a preview of the confirmation email, labelled as a demo.
 - Verified: full browser suite 27/27; Lighthouse mobile (local lab) home 96–98, `/stays/<slug>/` 97, `/account/` 99 performance, accessibility 100. Screenshots with a self-assessment: [stage 3](docs/visual-reviews/stage-3/). Details and limits: [validation](docs/VALIDATION.md).
+
+## Stage 5: owner panel (demo)
+
+- `/aurora/admin/` (Angular 22, hash routes, no backend). Demo sign-in has no password; the "Demo data" badge is always visible. Everything is stored in this browser only (`localStorage`); the public site's data is never modified.
+- Properties: edit nightly prices, add / edit / delete your own properties with photos (compressed in the browser, never uploaded), restore a demo stay.
+- Occupancy (`#/occupancy`): month calendar per property (keyboard accessible) that also shows demo bookings made on the public site (`aurora-bookings`), and a fictional revenue chart with CSV and Excel export. The revenue model is stated in the UI; nothing was actually paid.
+- Tests: `tests/admin.spec.ts` (8 Playwright tests, no WebGL needed). Screenshots script: `scripts/capture-stage5.mjs` → [docs/visual-reviews/stage-5](docs/visual-reviews/stage-5/). Lighthouse (`scripts/lighthouse.mjs`) reports `/admin/` as a report-only page. What was and was not run is in [validation](docs/VALIDATION.md).
 
 ## Stage-1 verification
 
